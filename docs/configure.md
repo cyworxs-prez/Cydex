@@ -38,9 +38,20 @@ values must be unique and valid even if unused.
 ## 1. Fill in the worksheet
 
 ```bash
-git clone <your fork> && cd cydex
-cp config/homelab.env.example config/homelab.env
+git clone https://github.com/cyworxs-prez/Cydex.git cydex
+cd cydex
+umask 077
+test -f config/homelab.env || cp config/homelab.env.example config/homelab.env
+chmod 600 config/homelab.env
+# Open config/homelab.env in your editor and save your values before continuing.
 ```
+
+If you downloaded an archive, extract it and open its root directory instead of cloning.
+Run the remaining commands from that directory on your admin workstation.
+
+Keep this deployment copy private. Localization writes real addresses into tracked rules,
+scripts and map data, even though `homelab.env` itself is ignored. A public fork should
+retain the fictional reference values. Do not push localized changes to it.
 
 Edit `config/homelab.env`. Every variable:
 
@@ -61,6 +72,35 @@ Edit `config/homelab.env`. Every variable:
 | `PVE_SSH` | How the workstation reaches the host | root@10.10.130.10 | key-based SSH works |
 | `MAP_BIND` / `MAP_PORT` | Map web server bind address / port | 10.10.130.10 / 8088 | a MGMT address |
 | `OP_VAULT` | 1Password vault name (if you use 1Password) | Homelab | no `&` in the name |
+
+### Choosing consistent values
+
+Pick non-overlapping private /24 subnets that do not conflict with your existing LAN,
+remote-access VPN or container networks. Reserve static addresses outside DHCP pools.
+The subnet octet and VLAN tag need not match. Keep a local console and a configuration
+backup before changing the host bridge, firewall gateway or management segment.
+
+For example, a fictional replacement for the reference MGMT segment is:
+
+```ini
+MGMT_NET=10.42.30.0/24
+MGMT_VLAN=230
+FW_MGMT_IP=10.42.30.1
+PVE_HOST=10.42.30.10
+PVE_SSH=root@10.42.30.10
+MAP_BIND=10.42.30.10
+```
+
+This is a **partial example, not a complete env file**. If the other four segments are
+also inside `10.42.0.0/16`, use that as `INTERNAL_SUPERNET` and move every LAB guest
+address into your chosen `LAB_NET`. Do not change only the management rows while
+leaving an incompatible supernet. Keep every guest ID and VLAN tag unique.
+
+The examples assume `.1` for segment gateways; account for that in the firewall and
+DHCP settings. Physical NIC names (`nic0`, `nic1`), bridge names, SSH keys and wireless
+credentials are separate settings. Verify them on your own hardware rather than
+assuming the sample names exist. The localization checker is a text-consistency check,
+not proof of reachability, non-overlapping networks or a correct firewall policy.
 
 Limits: one /24 per segment, IPv4 only, five segments. Adding a sixth segment means
 editing the Wazuh segmentation rules, `zeek/config/networks.cfg` and the map by hand.
@@ -93,8 +133,12 @@ What it does **not** touch: `docs/` (they keep describing the reference network 
 `--include-docs` if you want your values there too), `README.md`, `SECURITY.md`,
 `config/*.example`, and everything outside the repo (§3).
 
-It records what it applied in `config/localized.env`. **Commit that file in your fork** -
-it is how a later run knows which values to replace when you change `homelab.env`.
+It records what it applied in `config/localized.env`. Keep this file alongside the
+private deployment copy: later runs need it to know which values to replace.
+It contains your real network addresses and IDs, and `.gitignore` explicitly permits
+tracking it. Commit it only in a private repository with appropriate access; never
+commit it or the localized source files to a public fork. Keep a protected backup of
+the state file if you do not use private version control.
 
 **Changing a value later:** edit `homelab.env`, `--apply`, review, then redeploy the
 affected component (copy the changed rule files to Wazuh, the changed `.default` file
@@ -221,8 +265,10 @@ To get files onto a host or CT: `scp` to the Proxmox host, then `pct push <ctid>
 
 ## 5. Before enabling any automation
 
-Nothing in this repo enables a timer or an automatic action for you. Turn each one on
-only after its check passes - every one of these can act on, or page about, a live system.
+Some installers perform a check and then enable a timer, cron job or live action in the
+same run (see the Enable column). Inspect and configure them before running them.
+For separately enabled services, pass the check first. Every entry can act on, or page
+about, a live system.
 
 | Automation | Check first | Enable | Proof it works |
 |---|---|---|---|
@@ -257,3 +303,27 @@ python3 opnsense/scripts/iotdns-verify.py                # IoT DNS enforcement
 
 From one client per SSID: correct /24 lease, DNS via the gateway, expected egress address
 (`curl https://api.ipify.org`), and blocked access to segments it should not reach.
+
+
+## 7. Troubleshooting and keeping your deployment private
+
+| Symptom | Check first |
+|---|---|
+| Localizer reports a missing config | Run from the extracted/cloned project, create `config/homelab.env` from its example, then edit it |
+| Localizer reports invalid values | All five /24s, enclosing supernet, numeric unique VLANs/guest IDs, management host in MGMT; review the worksheet before applying |
+| Localizer passes but the network is unchanged | It only edits local files. Copy/install the affected settings on their target hosts and configure the device UIs |
+| SSH to Proxmox fails | Workstation segment, management access rules, `PVE_SSH`, route and SSH key; the reference DIRECT segment is isolated |
+| Client joins Wi-Fi but has no DHCP/DNS | AP tag, allowed VLANs on both trunks, firewall interface assignment and DHCP scope |
+| Zeek runs but logs no traffic | Actual tap/veth names, capture NIC, mirror filters, fresh log timestamps and controlled test traffic |
+| Reinstall leaves old values on a host | Installers preserve existing `/etc/default/` files; review and update those files explicitly |
+| Map still shows example devices | Localization changes addressing, not the inventory or layout; edit the private `map/model.js` and rebuild |
+
+A successful install is not a deployment test. Use one owned test client per segment,
+confirm allowed and blocked paths, verify fresh telemetry and paging, and test restores
+on an isolated guest before relying on the system.
+
+`tools/check.sh` checks a **public release**, not a configured private deployment.
+Real env files and private-pattern matches are expected to fail its packaging gate.
+Do not disable the gate or remove private patterns to make a localized copy pass.
+Keep an untouched public reference and export that separately; never publish synced
+live rules, credential files, real maps or screenshots without another privacy review.
