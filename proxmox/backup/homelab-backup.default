@@ -1,0 +1,8 @@
+# /etc/default/homelab-backup
+STORAGE=bulk-storage                       # Proxmox directory storage on the LUKS mount
+MNT=/mnt/bulk-storage
+MAPNAME=backup-crypt
+LUKS_DEV=/dev/disk/by-id/REPLACE-part1     # ls -l /dev/disk/by-id/
+ABORT_GIB=100
+GUESTS="200 201 202 203 204 205 206"
+GREENBONE_VMID=202

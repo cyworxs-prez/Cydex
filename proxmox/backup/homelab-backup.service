@@ -1,0 +1,20 @@
+[Unit]
+Description=Homelab weekly encrypted backup
+Documentation=file:///usr/local/sbin/homelab-backup.sh
+After=network-online.target
+# Add your mount unit, e.g. RequiresMountsFor=/mnt/bulk-storage
+RequiresMountsFor=/mnt/bulk-storage
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /usr/local/sbin/homelab-backup.sh
+# generous ceiling - slow USB drives can take hours
+TimeoutStartSec=4h
+# log the outcome under a distinct tag so Wazuh can page on failure
+ExecStopPost=/bin/sh -c 'if [ "$EXIT_STATUS" = "0" ]; then \
+  logger -t homelab-backup -p daemon.notice -- "weekly backup COMPLETED and verified"; \
+else \
+  REASON=$(grep -h "^!!" $(ls -t /var/log/homelab-backup-*.log 2>/dev/null | head -1) 2>/dev/null | tail -1 | cut -c4-160); \
+  logger -t homelab-backup -p daemon.err -- "weekly backup FAILED (status=$EXIT_STATUS) - archives NOT verified - ${REASON:-no reason logged, check the newest /var/log/homelab-backup-*.log}"; \
+fi'

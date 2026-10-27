@@ -1,0 +1,26 @@
+{
+  "name": "homelab-map",
+  "version": "1.0.0",
+  "description": "Isometric homelab network map (isoflow), built to one self-contained HTML file",
+  "main": "model.js",
+  "scripts": {
+    "gen": "node gen-model-mjs.mjs",
+    "check": "node gen-model-mjs.mjs && node check-layout.mjs",
+    "build": "./build-local.sh",
+    "render-check": "node check-render.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@isoflow/isopacks": "^0.0.10",
+    "esbuild": "^0.28.2",
+    "isoflow": "^1.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "private": true,
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}

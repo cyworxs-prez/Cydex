@@ -1,0 +1,61 @@
+<!--
+  Suricata alerts from OPNsense (syslog fast.log shape and EVE severity). The scanner address is demoted, not paged.
+-->
+<group name="suricata,ids,opnsense,">
+
+  <rule id="100200" level="0">
+    <decoded_as>suricata-syslog</decoded_as>
+    <description>Suricata: engine message (no alert).</description>
+  </rule>
+
+  <rule id="100201" level="0">
+    <if_sid>100200</if_sid>
+    <field name="signature">\.+</field>
+    <description>Suricata: Alert - $(signature)</description>
+    <group>ids_alert,network_ids,</group>
+  </rule>
+
+  <rule id="100202" level="6">
+    <if_sid>100201</if_sid>
+    <field name="priority">^2$</field>
+    <description>Suricata: Medium priority alert - $(signature)</description>
+    <group>ids_alert,network_ids,</group>
+  </rule>
+
+  <rule id="100203" level="10">
+    <if_sid>100201</if_sid>
+    <field name="priority">^1$</field>
+    <description>Suricata: High priority alert - $(signature)</description>
+    <group>ids_alert,network_ids,attack,</group>
+  </rule>
+
+  <rule id="100210" level="2">
+    <if_sid>100201,100202,100203</if_sid>
+    <field name="src_ip">^10\.10\.140\.12$</field>
+    <description>Suricata: Alert from authorised scanner - $(signature)</description>
+    <group>ids_alert,scanner_allowlist,</group>
+  </rule>
+
+  <rule id="100205" level="12">
+    <if_sid>86601</if_sid>
+    <field name="alert.severity">^1$</field>
+    <description>SURICATA HIGH SEVERITY: $(alert.signature) from $(src_ip) to $(dest_ip)</description>
+    <mitre><id>T1046</id></mitre>
+    <group>suricata,ids,high_severity,</group>
+  </rule>
+
+  <rule id="100206" level="0">
+    <if_sid>100205</if_sid>
+    <field name="src_ip">^10\.10\.140\.12$</field>
+    <description>Suricata high severity from Greenbone scanner (suppressed)</description>
+    <group>suricata,ids,scanner_allowlist,</group>
+  </rule>
+
+  <rule id="100207" level="0">
+    <if_sid>100205</if_sid>
+    <field name="src_ip">^10\.10\.140\.24$</field>
+    <description>Suricata high severity from Kali lab host (suppressed)</description>
+    <group>suricata,ids,scanner_allowlist,</group>
+  </rule>
+
+</group>

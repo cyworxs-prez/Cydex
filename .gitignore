@@ -1,0 +1,33 @@
+# real config - only the *.example files are tracked
+config/*.env
+!config/*.env.example
+.env*
+!*.env.example
+
+# secrets / keys - never commit
+*.pem
+*.key
+build_key*
+id_*
+*.tar
+*.tgz
+*.tar.gz
+
+# generated
+map/node_modules/
+map/bundle.js
+map/homelab-map.html
+map/vendor/
+ai-ops/mcp/wazuh/mcp-server-wazuh
+__pycache__/
+*.pyc
+*.bak*
+.DS_Store
+
+# local runtime data
+*.sqlite3*
+*.log
+*.csv
+
+# never keep the private sanitizer list in the repo
+*private-patterns*

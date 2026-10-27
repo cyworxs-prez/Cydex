@@ -1,0 +1,62 @@
+<!--
+  Authorized vulnerability scanner: demote its alerts to level 2 (searchable, never paged). Set the scanner address for your network.
+-->
+<group name="greenbone,scanner_suppression,">
+
+  <rule id="100720" level="0">
+    <if_sid>5551</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: multiple failed logins (suppressed)</description>
+    <group>scanner_suppression,</group>
+  </rule>
+
+  <rule id="100721" level="0">
+    <if_sid>5710</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: non-existent user probe (suppressed)</description>
+    <group>scanner_suppression,</group>
+  </rule>
+
+  <rule id="100722" level="0">
+    <if_sid>5503</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: PAM login failed (suppressed)</description>
+    <group>scanner_suppression,</group>
+  </rule>
+
+  <rule id="100723" level="0">
+    <if_sid>5715</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: sshd auth success (suppressed)</description>
+    <group>scanner_suppression,</group>
+  </rule>
+
+  <rule id="100724" level="0">
+    <if_sid>5760</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: sshd auth failed (suppressed)</description>
+    <group>scanner_suppression,</group>
+  </rule>
+
+  <rule id="100725" level="0">
+    <if_sid>5712</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: brute-force pattern, non-existent user (suppressed)</description>
+    <group>scanner_suppression,</group>
+  </rule>
+
+  <rule id="100726" level="0">
+    <if_sid>5763</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: brute-force pattern, auth failure (suppressed)</description>
+    <group>scanner_suppression,</group>
+  </rule>
+
+  <rule id="100727" level="0">
+    <if_sid>40112</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: auth failures followed by success (suppressed)</description>
+    <group>scanner_suppression,</group>
+  </rule>
+
+</group>

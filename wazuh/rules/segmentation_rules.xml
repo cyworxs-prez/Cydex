@@ -1,0 +1,92 @@
+<!--
+  Blocked cross-segment flows. Escalates by protected destination; level-0 children remove same-segment, established-flow remnants and ephemeral-port UDP. Reference example - adapt the subnets.
+-->
+<group name="firewall,opnsense,segmentation,">
+
+  <rule id="100840" level="6">
+    <if_sid>100030</if_sid>
+    <srcip>10.10.0.0/16</srcip>
+    <dstip>10.10.0.0/16</dstip>
+    <description>Internal blocked flow: $(srcip) -> $(dstip) (inter-segment deny)</description>
+    <group>firewall_block,internal_block,lateral,</group>
+  </rule>
+
+  <rule id="100841" level="6">
+    <if_sid>100840</if_sid>
+    <dstip>10.10.110.0/24</dstip>
+    <description>SEGMENTATION VIOLATION: internal host $(srcip) blocked reaching TRUSTED $(dstip)</description>
+    <mitre><id>T1046</id></mitre>
+    <group>firewall_block,internal_block,segmentation_violation,</group>
+  </rule>
+
+  <rule id="100842" level="6">
+    <if_sid>100840</if_sid>
+    <dstip>10.10.130.0/24</dstip>
+    <description>SEGMENTATION VIOLATION: internal host $(srcip) blocked reaching MGMT $(dstip)</description>
+    <mitre><id>T1046</id></mitre>
+    <group>firewall_block,internal_block,segmentation_violation,</group>
+  </rule>
+
+  <rule id="100843" level="10">
+    <if_sid>100840</if_sid>
+    <dstip>10.10.140.0/24</dstip>
+    <description>SEGMENTATION VIOLATION: internal host $(srcip) blocked reaching LAB/SOC $(dstip)</description>
+    <mitre><id>T1046</id></mitre>
+    <group>firewall_block,internal_block,segmentation_violation,</group>
+  </rule>
+
+  <rule id="100845" level="10" frequency="12" timeframe="300" ignore="3600">
+    <if_group>segmentation_violation</if_group>
+    <if_matched_group>segmentation_violation</if_matched_group>
+    <same_source_ip />
+    <description>SEGMENTATION VIOLATION (sustained): $(srcip) repeatedly blocked reaching a protected zone</description>
+    <mitre>
+      <id>T1595</id>
+    </mitre>
+    <group>firewall_block,internal_block,multiple_blocks,</group>
+  </rule>
+
+  <rule id="100844" level="0">
+    <if_sid>100841, 100842, 100843</if_sid>
+    <match>,A,|,PA,|,FA,|,RA,|,SA,|,FPA,|,PRA,|,FRA,|,SRA,|,FPRA,</match>
+    <description>Blocked ACK-bearing remnant of an established flow (teardown/out-of-state) - not a probe</description>
+    <group>firewall_block,established_remnant,</group>
+  </rule>
+
+  <rule id="100851" level="6">
+    <if_sid>100843</if_sid>
+    <srcip>10.10.150.0/24</srcip>
+    <description>DIRECT (VLAN 150) host $(srcip) blocked reaching LAB/SOC $(dstip) - expected, segment is isolated by design</description>
+    <group>firewall_block,internal_block,direct_segment_expected,</group>
+  </rule>
+
+  <rule id="100850" level="0">
+    <if_sid>100841, 100842, 100843</if_sid>
+    <protocol>udp</protocol>
+    <dstport type="pcre2">^(4915[2-9]|491[6-9][0-9]|49[2-9][0-9][0-9]|5[0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5])$</dstport>
+    <description>Blocked UDP to ephemeral port (app traffic, not reconnaissance)</description>
+    <group>firewall_block,app_traffic,</group>
+  </rule>
+
+  <rule id="100846" level="0">
+    <if_sid>100841</if_sid>
+    <srcip>10.10.110.0/24</srcip>
+    <description>Intra-segment block within TRUSTED (not a segmentation violation)</description>
+    <group>firewall_block,intra_segment,</group>
+  </rule>
+
+  <rule id="100847" level="0">
+    <if_sid>100842</if_sid>
+    <srcip>10.10.130.0/24</srcip>
+    <description>Intra-segment block within MGMT (not a segmentation violation)</description>
+    <group>firewall_block,intra_segment,</group>
+  </rule>
+
+  <rule id="100848" level="0">
+    <if_sid>100843</if_sid>
+    <srcip>10.10.140.0/24</srcip>
+    <description>Intra-segment block within LAB/SOC (not a segmentation violation)</description>
+    <group>firewall_block,intra_segment,</group>
+  </rule>
+
+</group>

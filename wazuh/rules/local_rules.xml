@@ -1,0 +1,73 @@
+<!--
+  Noise tuning, authorized-scanner demotion, and firewall-block visibility. Reference example - adapt subnets and the scanner address.
+-->
+<group name="local,homelab-tuning,">
+
+  <rule id="100010" level="0">
+    <if_sid>510</if_sid>
+    <match>/dev/.lxc</match>
+    <description>Rootcheck: LXC /dev bind-mount artifact (suppressed container false positive)</description>
+  </rule>
+
+  <rule id="100011" level="2">
+    <if_sid>533</if_sid>
+    <description>Listened ports changed - demoted to non-alerting (routine churn)</description>
+  </rule>
+
+</group>
+
+<group name="local,scanner-allowlist,">
+
+  <rule id="100020" level="2">
+    <if_group>authentication_failed</if_group>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: authentication failure (demoted, not paged)</description>
+  </rule>
+
+  <rule id="100021" level="2">
+    <if_group>authentication_failures</if_group>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: repeated auth failures (demoted, not paged)</description>
+  </rule>
+
+  <rule id="100022" level="2">
+    <if_group>firewall_block</if_group>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: firewall block (demoted, not paged)</description>
+  </rule>
+
+  <rule id="100023" level="2">
+    <if_group>recon</if_group>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: recon/port probe (demoted, not paged)</description>
+  </rule>
+
+  <rule id="100024" level="2">
+    <if_group>attacks</if_group>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: attack signature (demoted, not paged)</description>
+  </rule>
+
+  <rule id="100025" level="2">
+    <if_group>web</if_group>
+    <srcip>10.10.140.12</srcip>
+    <description>Greenbone authorized scan: web probe (demoted, not paged)</description>
+  </rule>
+
+</group>
+
+<group name="local,firewall-visibility,">
+
+  <rule id="100030" level="3">
+    <if_sid>87701</if_sid>
+    <description>Firewall block (OPNsense filterlog)</description>
+    <group>firewall_block,</group>
+  </rule>
+
+  <rule id="100031" level="0">
+    <if_sid>100030</if_sid>
+    <match>,wg0,match,block,</match>
+    <description>Firewall block on wg0 VPN transit (not IDS-monitored, suppressed)</description>
+    <group>firewall_block,vpn_transit,</group>
+  </rule>
+</group>

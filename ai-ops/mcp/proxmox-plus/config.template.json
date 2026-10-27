@@ -1,0 +1,62 @@
+{
+  "proxmox": {
+    "host": "__PVE_HOST__",
+    "port": 8006,
+    "verify_ssl": false,
+    "service": "PVE"
+  },
+  "auth": {
+    "user": "root@pam",
+    "token_name": "{{ op://Homelab/proxmox-api-token/token name }}",
+    "token_value": "{{ op://Homelab/proxmox-api-token/credential }}"
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file": "__TARGET__/proxmox_mcp.log"
+  },
+  "mcp": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "transport": "STDIO",
+    "dns_rebinding_protection": null,
+    "allowed_hosts": [],
+    "allowed_origins": []
+  },
+  "security": {
+    "dev_mode": true
+  },
+  "jobs": {
+    "sqlite_path": "__TARGET__/proxmox-jobs.sqlite3"
+  },
+  "command_policy": {
+    "mode": "allowlist",
+    "allow_patterns": [
+      "^(cat|grep|head|tail|ls|wc|stat)\\s",
+      "^(ping|ip|ss|hostname|df|free|uname)\\b",
+      "^echo\\s",
+      "^sed\\s+-i",
+      "^/var/ossec/bin/\\S+",
+      "^systemctl\\s+(status|start|restart|enable)\\s+\\S+",
+      "^curl\\s",
+      "^docker\\s+(ps|restart|logs)\\b",
+      "^(apt|apt-get)\\s+(update|install)\\b",
+      "^(wget|dpkg)\\s"
+    ],
+    "deny_patterns": [
+      "(^|\\s)rm\\s+-rf(\\s|$)",
+      ":\\(\\)\\{:\\|:\\&\\};:"
+    ],
+    "require_approval_token": "REPLACE_ME",
+    "approval_token": "REPLACE_ME"
+  },
+  "ssh": {
+    "user": "root",
+    "port": 22,
+    "key_file": "__TARGET__/build_key",
+    "host_overrides": {
+      "pve": "__PVE_HOST__"
+    },
+    "prefer_ssh_client": true
+  }
+}

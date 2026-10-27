@@ -1,0 +1,42 @@
+<!--
+  YARA scan results plus a daily heartbeat, so a clean scan and a dead scanner look different. Location-gated rules cannot be exercised with wazuh-logtest; verify in alerts.log.
+-->
+<group name="yara,">
+
+  <rule id="100820" level="0">
+    <decoded_as>json</decoded_as>
+    <location>/var/log/yara/yara-scan.log</location>
+    <description>YARA scan log (base)</description>
+    <group>yara,</group>
+  </rule>
+
+  <rule id="100823" level="3">
+    <if_sid>100820</if_sid>
+    <field name="yara_status">^ok$</field>
+    <description>YARA scan completed on $(yara_host) at $(yara_scan_ts)</description>
+    <group>yara,heartbeat,</group>
+  </rule>
+
+  <rule id="100824" level="7">
+    <if_sid>100820</if_sid>
+    <field name="yara_status">^no_rules$</field>
+    <description>YARA scan ABORTED on $(yara_host): rule file missing or empty</description>
+    <group>yara,heartbeat,</group>
+  </rule>
+
+  <rule id="100821" level="12">
+    <if_sid>100820</if_sid>
+    <field name="yara_rule">\.+</field>
+    <description>YARA match: $(yara_rule) in $(yara_file)</description>
+    <mitre><id>T1204.002</id></mitre>
+    <group>yara,malware,</group>
+  </rule>
+
+  <rule id="100822" level="5">
+    <if_sid>100821</if_sid>
+    <field name="yara_rule">EICAR|Eicar|eicar</field>
+    <description>YARA match: EICAR antivirus test file (benign test) in $(yara_file)</description>
+    <group>yara,test,</group>
+  </rule>
+
+</group>

@@ -1,0 +1,27 @@
+<!--
+  Suricata alerts arriving over syslog from OPNsense (fast.log shape). Wazuh ships no decoder for it.
+
+  Synthetic sample:
+  suricata[1000]: [1:2000001:1] ET EXAMPLE Test Signature [Classification: Attempted Information Leak] [Priority: 2] {TCP} 198.51.100.7:40000 -> 203.0.113.10:443
+-->
+<decoder name="suricata-syslog">
+  <program_name>^suricata$</program_name>
+</decoder>
+
+<decoder name="suricata-syslog-alert">
+  <parent>suricata-syslog</parent>
+  <regex type="pcre2">^\[(\d+):(\d+):(\d+)\] (.+?) \[Classification: ([^\]]*)\] \[Priority: (\d+)\] \{(\w+)\} ([0-9a-fA-F.:]+):(\d+) -> ([0-9a-fA-F.:]+):(\d+)</regex>
+  <order>gid, sid, rev, signature, classification, priority, protocol, srcip, srcport, dstip, dstport</order>
+</decoder>
+
+<decoder name="suricata-syslog-alert">
+  <parent>suricata-syslog</parent>
+  <regex type="pcre2">^\[(\d+):(\d+):(\d+)\] (.+?) \[Classification: ([^\]]*)\] \[Priority: (\d+)\] \{(\w+)\} ([0-9a-fA-F.:]+) -> ([0-9a-fA-F.:]+)$</regex>
+  <order>gid, sid, rev, signature, classification, priority, protocol, srcip, dstip</order>
+</decoder>
+
+<decoder name="suricata-syslog-alert">
+  <parent>suricata-syslog</parent>
+  <regex type="pcre2">^\[(\d+):(\d+):(\d+)\] (.+?) \[Priority: (\d+)\] \{(\w+)\} ([0-9a-fA-F.:]+):(\d+) -> ([0-9a-fA-F.:]+):(\d+)</regex>
+  <order>gid, sid, rev, signature, priority, protocol, srcip, srcport, dstip, dstport</order>
+</decoder>

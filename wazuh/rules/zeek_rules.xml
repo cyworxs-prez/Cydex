@@ -1,0 +1,75 @@
+<!--
+  Zeek notices, TLS validation issues, software inventory, and sensor health from capture_loss.log.
+-->
+<group name="zeek,">
+  <rule id="100710" level="6">
+    <decoded_as>json</decoded_as>
+    <field name="note">\.+</field>
+    <description>Zeek Notice: $(note)</description>
+    <group>zeek,ids,</group>
+  </rule>
+  <rule id="100711" level="9">
+    <if_sid>100710</if_sid>
+    <field name="note">Scan::|Traceroute::|SSH::Password_Guessing|Intel::|Weird::Activity</field>
+    <description>Zeek high-value notice: $(note) $(msg)</description>
+    <mitre><id>T1046</id><id>T1110</id></mitre>
+    <group>zeek,ids,attack,</group>
+  </rule>
+  <rule id="100715" level="6">
+    <decoded_as>json</decoded_as>
+    <field name="validation_status">self signed|expired|revoked|not trusted|bad signature</field>
+    <description>Zeek TLS validation issue: $(validation_status) for $(server_name)</description>
+    <mitre><id>T1573</id></mitre>
+    <group>zeek,ssl,</group>
+  </rule>
+  <rule id="100716" level="3">
+    <decoded_as>json</decoded_as>
+    <field name="name">\.+</field>
+    <field name="source">\.+</field>
+    <description>Zeek weird: $(name)</description>
+    <group>zeek,anomaly,</group>
+  </rule>
+  <rule id="100717" level="0">
+    <if_sid>100716</if_sid>
+    <field name="name">truncated_tcp_payload|QUIC_spurious_short_header_packet_threshold_crossed|window_recision|TCP_ack_underflow_or_misorder|bad_TCP_checksum|bad_UDP_checksum|dns_unmatched_reply|possible_split_routing|inappropriate_FIN|data_before_established</field>
+    <description>Zeek weird: benign SPAN/offload artifact (suppressed)</description>
+    <group>zeek,anomaly,suppressed,</group>
+  </rule>
+
+  <rule id="100730" level="0">
+    <decoded_as>json</decoded_as>
+    <field name="acks">\.+</field>
+    <description>Zeek capture_loss record (base)</description>
+    <group>zeek,collector_health,</group>
+  </rule>
+
+  <rule id="100731" level="5">
+    <if_sid>100730</if_sid>
+    <field name="acks">^0$</field>
+    <description>Zeek reported zero acks in one capture_loss window (single occurrence - may be a restart)</description>
+    <mitre><id>T1562.001</id></mitre>
+    <group>zeek,collector_health,sensor_blind,</group>
+  </rule>
+
+  <rule id="100732" level="7">
+    <if_sid>100730</if_sid>
+    <field name="percent_lost">^[1-9][0-9]\.|^100</field>
+    <description>Zeek capture loss elevated: $(percent_lost)% of traffic missed</description>
+    <group>zeek,collector_health,</group>
+  </rule>
+
+  <rule id="100712" level="6">
+    <if_sid>100710</if_sid>
+    <field name="note">CaptureLoss::</field>
+    <description>Zeek capture loss notice: $(msg)</description>
+    <group>zeek,ids,collector_health,</group>
+  </rule>
+
+  <rule id="100713" level="12" frequency="3" timeframe="3600" ignore="21600">
+    <if_matched_sid>100712</if_matched_sid>
+    <description>SENSOR BLIND: sustained Zeek capture loss - the network sensor is not seeing traffic</description>
+    <mitre><id>T1562.001</id></mitre>
+    <group>zeek,ids,collector_health,sensor_blind,</group>
+  </rule>
+
+</group>

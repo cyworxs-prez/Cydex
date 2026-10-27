@@ -1,0 +1,70 @@
+<!--
+  Firewall-VM liveness watchdog (logger tag opnsense-watchdog). Anchored on program_name so systemd unit chatter and duplicated stdout lines never match. Heartbeat 0, standing down 3, self-recovery 5, probes failing 7, recovering/cooldown 10, start failed / no return / daily cap 12.
+-->
+<group name="watchdog,opnsense_watchdog,local,">
+
+  <rule id="100860" level="0">
+    <program_name>^opnsense-watchdog$</program_name>
+    <description>OPNsense watchdog message (parent)</description>
+  </rule>
+
+  <rule id="100861" level="0">
+    <program_name>^opnsense-watchdog.sh$</program_name>
+    <description>OPNsense watchdog - systemd stdout duplicate, silenced</description>
+  </rule>
+
+  <rule id="100862" level="0">
+    <if_sid>100860</if_sid>
+    <match>heartbeat: </match>
+    <description>OPNsense watchdog heartbeat - healthy</description>
+  </rule>
+
+  <rule id="100863" level="3">
+    <if_sid>100860</if_sid>
+    <match>standing down</match>
+    <description>OPNsense watchdog standing down - firewall VM not running or locked</description>
+  </rule>
+
+  <rule id="100864" level="5">
+    <if_sid>100860</if_sid>
+    <match>recovered on its own</match>
+    <description>OPNsense firewall VM recovered on its own after failed probes</description>
+  </rule>
+
+  <rule id="100865" level="7">
+    <if_sid>100860</if_sid>
+    <match>ALL probes failed</match>
+    <description>OPNsense firewall VM all watchdog probes failed - still below action threshold</description>
+  </rule>
+
+  <rule id="100866" level="10">
+    <if_sid>100860</if_sid>
+    <match>still down but within cooldown</match>
+    <description>OPNsense firewall VM still down, watchdog in cooldown and NOT acting</description>
+  </rule>
+
+  <rule id="100867" level="10">
+    <if_sid>100860</if_sid>
+    <match>RECOVERING</match>
+    <description>OPNsense firewall VM unresponsive - watchdog is force-recovering it</description>
+  </rule>
+
+  <rule id="100868" level="12">
+    <if_sid>100860</if_sid>
+    <match>START FAILED</match>
+    <description>OPNsense firewall VM START FAILED during watchdog recovery - firewall is down</description>
+  </rule>
+
+  <rule id="100869" level="12">
+    <if_sid>100860</if_sid>
+    <match>did NOT come back</match>
+    <description>OPNsense firewall VM did not return after recovery - manual intervention required</description>
+  </rule>
+
+  <rule id="100870" level="12">
+    <if_sid>100860</if_sid>
+    <match>REFUSING to act</match>
+    <description>OPNsense firewall VM hit the daily recovery cap - watchdog refuses to act, needs a human</description>
+  </rule>
+
+</group>

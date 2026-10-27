@@ -1,0 +1,15 @@
+# Hand-curated indicators for this site. Rebuilt into master.dat by
+# /usr/local/bin/zeek-intel-update.sh -- edit here, never edit master.dat.
+#
+# TAB-separated, four columns, no header:
+#   indicator <TAB> indicator_type <TAB> meta.source <TAB> meta.desc
+#
+# indicator_type is one of:
+#   Intel::ADDR  Intel::DOMAIN  Intel::URL  Intel::SUBNET
+#   Intel::EMAIL Intel::FILE_HASH  Intel::CERT_HASH  Intel::SOFTWARE
+#
+# meta.source MUST be "local" for these -- Wazuh rule 100902 keys on it and
+# alerts at level 14, above the public-feed rules.
+#
+# Example (commented):
+#203.0.113.66	Intel::ADDR	local	Known-bad seen in prior incident

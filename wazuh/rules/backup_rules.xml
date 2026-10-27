@@ -1,0 +1,23 @@
+<!--
+  Weekly encrypted backup outcome (logger tag homelab-backup). Completed and verified 3; failed 12.
+-->
+<group name="backup,homelab_backup,local,">
+
+  <rule id="100880" level="0">
+    <program_name>^homelab-backup$</program_name>
+    <description>homelab weekly backup message (parent)</description>
+  </rule>
+
+  <rule id="100881" level="3">
+    <if_sid>100880</if_sid>
+    <match>COMPLETED and verified</match>
+    <description>Homelab weekly backup completed and verified by read-back</description>
+  </rule>
+
+  <rule id="100882" level="12">
+    <if_sid>100880</if_sid>
+    <match>FAILED</match>
+    <description>Homelab weekly backup FAILED - archives NOT verified, recovery is not current</description>
+  </rule>
+
+</group>

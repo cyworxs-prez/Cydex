@@ -1,0 +1,10 @@
+[Unit]
+Description=OPNsense VM liveness watchdog
+After=pve-guests.service
+ConditionPathExists=/usr/sbin/qm
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/opnsense-watchdog.sh
+# never let a stuck probe pile up
+TimeoutStartSec=300

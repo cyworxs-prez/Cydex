@@ -1,0 +1,7 @@
+# /etc/default/opnsense-watchdog
+VMID=200              # OPNsense VM ID
+GW=10.10.130.1       # an OPNsense address the Proxmox host can reach directly
+FAIL_THRESHOLD=5      # consecutive all-probe failures before recovery (timer = 60s)
+COOLDOWN=1800         # seconds between recovery attempts
+MAX_PER_DAY=3         # hard cap - after this it refuses and logs "needs a human"
+HEARTBEAT_EVERY=60    # one "heartbeat" log line per N healthy runs (~hourly)

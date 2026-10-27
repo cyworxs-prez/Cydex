@@ -1,0 +1,11 @@
+[Unit]
+Description=Weekly encrypted backup, Sunday 03:00
+
+[Timer]
+OnCalendar=Sun *-*-* 03:00:00
+# if pve was off at 03:00 Sunday, run once it is back rather than skipping the week
+Persistent=true
+RandomizedDelaySec=10m
+
+[Install]
+WantedBy=timers.target

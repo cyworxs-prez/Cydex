@@ -1,0 +1,8 @@
+<!-- Add inside <ossec_config> on the Wazuh manager. hook_url is your ntfy topic URL,
+     e.g. https://ntfy.sh/<long-random-topic> - treat the topic name as a secret. -->
+<integration>
+  <name>custom-ntfy</name>
+  <hook_url>https://ntfy.sh/&lt;your-long-random-topic&gt;</hook_url>
+  <level>10</level>
+  <alert_format>json</alert_format>
+</integration>
