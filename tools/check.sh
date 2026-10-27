@@ -10,13 +10,13 @@
 # so each image must be listed in tools/reviewed-images.sha256 after a visual review.
 #
 # Private patterns (your real names, addresses, SSIDs, device brands...) live
-# OUTSIDE the repo: $HOMELAB_PRIVATE_PATTERNS, default
-# ~/.config/homelab-soc/private-patterns.txt, one fixed string per line. The gate
+# OUTSIDE the repo: $CYDEX_PRIVATE_PATTERNS, default
+# ~/.config/cydex/private-patterns.txt, one fixed string per line. The gate
 # fails if that file is missing - a scan without it proves very little.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 DIR="$(cd "${1:-$HERE/..}" && pwd)"
-PRIV="${HOMELAB_PRIVATE_PATTERNS:-$HOME/.config/homelab-soc/private-patterns.txt}"
+PRIV="${CYDEX_PRIVATE_PATTERNS:-$HOME/.config/cydex/private-patterns.txt}"
 fail=0
 sha() { if command -v sha256sum >/dev/null; then sha256sum "$1"; else shasum -a 256 "$1"; fi; }
 note() { printf '  %-6s %s\n' "$1" "$2"; }

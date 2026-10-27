@@ -13,7 +13,7 @@ resolvers listed in the DoH-hunting code.
 1. Keep your private pattern list **outside** the repo - one fixed string per line:
    your real names, domains, public and private addresses, SSIDs, hostnames, device
    brands and models, vault/item IDs. Default location:
-   `~/.config/homelab-soc/private-patterns.txt` (or set `$HOMELAB_PRIVATE_PATTERNS`).
+   `~/.config/cydex/private-patterns.txt` (or set `$CYDEX_PRIVATE_PATTERNS`).
 2. Commit, then run `tools/export-release.sh`. It builds the release from committed
    files with `git archive` (no `.git`, no ignored files, no filesystem metadata) in a
    directory outside the repo, and runs `tools/check.sh` on that export.

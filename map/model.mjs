@@ -287,7 +287,7 @@ const controlText = [
 
 export const model = {
   version: '1.1.1',
-  title: 'Homelab SOC — fictional reference network',
+  title: 'Cydex — fictional reference network',
   icons: pack.icons,
   colors,
   items,

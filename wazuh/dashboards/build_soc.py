@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build "Homelab - SOC": one unified view over everything the homelab reports.
+Build "Cydex - SOC": one unified view over everything the homelab reports.
 
 Design notes
 ------------
@@ -24,7 +24,7 @@ INDEX = "wazuh-alerts-*"
 # The alerts stream only carries NEWLY detected CVEs, which is why long-lived hosts
 # could look clean there despite carrying hundreds of open findings.
 VULN_INDEX = "wazuh-states-vulnerabilities-*"
-DASH_ID = "homelab-soc"
+DASH_ID = "cydex-soc"
 
 # The noise floor. Everything "cross-cutting" filters it out.
 NOFW = "not rule.groups:firewall_block"
@@ -301,7 +301,7 @@ for i, (vid, x, y, w, h) in enumerate(PANELS):
 
 dashboard = {
     "dashboard": {
-        "title": "Homelab - SOC",
+        "title": "Cydex - SOC",
         "description": (
             "Unified view of everything the homelab reports: vulnerabilities, "
             "identity, ATT&CK coverage, compliance posture, per-host volume, the "

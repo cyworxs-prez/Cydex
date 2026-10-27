@@ -96,7 +96,7 @@ Run inside CT 201 (they use the indexer admin certs on the box):
 
 | Script | Builds |
 |---|---|
-| `wazuh/dashboards/build_soc.py` | "Homelab - SOC" - one view over everything; firewall blocks contained in their own section so they do not drown other signal |
+| `wazuh/dashboards/build_soc.py` | "Cydex - SOC" - one view over everything; firewall blocks contained in their own section so they do not drown other signal |
 | `wazuh/dashboards/add_ids_panels.py` | Suricata panels on the threat-map dashboard |
 | `wazuh/dashboards/eve_repoint.py` | Moves IDS panels onto EVE fields + GeoIP |
 | `wazuh/dashboards/mkviz.py` | Regenerates `hunt-dashboard.ndjson` (import via Dashboards Management > Saved objects) |

@@ -38,8 +38,8 @@ desktop app locked.
 MCP client config is then just the launcher path, e.g.:
 
 ```json
-"opnsense": { "command": "/path/to/homelab-soc/ai-ops/mcp/opnsense/run-opnsense-mcp.sh" },
-"wazuh":    { "command": "/path/to/homelab-soc/ai-ops/mcp/wazuh/run-wazuh-mcp.sh" }
+"opnsense": { "command": "/path/to/cydex/ai-ops/mcp/opnsense/run-opnsense-mcp.sh" },
+"wazuh":    { "command": "/path/to/cydex/ai-ops/mcp/wazuh/run-wazuh-mcp.sh" }
 ```
 
 Least privilege: the Wazuh MCP uses the indexer's read-only `readall` user for alert

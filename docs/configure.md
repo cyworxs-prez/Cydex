@@ -38,7 +38,7 @@ values must be unique and valid even if unused.
 ## 1. Fill in the worksheet
 
 ```bash
-git clone <your fork> && cd homelab-soc
+git clone <your fork> && cd cydex
 cp config/homelab.env.example config/homelab.env
 ```
 

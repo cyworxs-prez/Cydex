@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="docs/img/logo.svg" alt="homelab-soc logo" width="140"/>
+  <img src="docs/img/logo.svg" alt="Cydex logo" width="140"/>
 </div>
 
-<h1 align="center">homelab-soc</h1>
+<h1 align="center">Cydex</h1>
 
 <p align="center"><strong>A segmented home network with a working blue-team stack on one Proxmox host - firewall/IDS, SIEM, network sensor, threat intel, paging, self-healing, encrypted backups, and an AI-operations layer with guardrails.</strong></p>
 
@@ -60,7 +60,7 @@ nobody has restored, and alerts that drown in broadcast noise.
    a managed switch, multi-SSID APs. [Details](docs/setup/00-prerequisites.md).
 2. **Make it yours**
    ```bash
-   git clone <your fork> && cd homelab-soc
+   git clone <your fork> && cd cydex
    cp config/homelab.env.example config/homelab.env     # your subnets, VLANs, IPs, guest IDs
    python3 tools/localize.py --apply                    # writes them into rules, configs, scripts, map
    python3 tools/localize.py --check                    # OK - every file matches

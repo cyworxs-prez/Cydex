@@ -30,7 +30,7 @@ chmod 750 "$DIR"
 echo "== 3. systemd unit"
 cat > /etc/systemd/system/homelab-map.service <<EOF
 [Unit]
-Description=Homelab network map (static, MGMT only)
+Description=Cydex network map (static, MGMT only)
 After=network-online.target
 Wants=network-online.target
 

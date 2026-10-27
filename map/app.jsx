@@ -150,7 +150,7 @@ const App = () => {
       {!phone && (
         <div style={{ position: 'fixed', zIndex: 10, left: 12, top: 12 }}>
           <div style={{ ...cardBase, padding: '10px 12px', marginBottom: 8 }}>
-            <div style={{ fontWeight: 700, marginBottom: 2 }}>Homelab network</div>
+            <div style={{ fontWeight: 700, marginBottom: 2 }}>Cydex</div>
             <div style={{ color: '#64748b', fontSize: 11 }}>fictional reference network</div>
             <ViewTabs view={view} setView={setView} phone={false} />
           </div>
@@ -175,7 +175,7 @@ const App = () => {
             top: 'calc(10px + env(safe-area-inset-top))',
             ...cardBase, padding: '6px 10px'
           }}>
-            <div style={{ fontWeight: 700, fontSize: 13 }}>Homelab network</div>
+            <div style={{ fontWeight: 700, fontSize: 13 }}>Cydex</div>
             <div style={{ color: '#64748b', fontSize: 10 }}>fictional reference network</div>
           </div>
 
