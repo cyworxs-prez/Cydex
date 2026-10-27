@@ -30,17 +30,17 @@
 Every address, ID and device in this repo belongs to a **fictional reference network**.
 [`tools/localize.py`](docs/configure.md#2-localize-the-repo) rewrites them to yours in one step.
 
-## Why this exists
+## Why I built Cydex
 
-Most homelab security guides stop at "install Wazuh". This one covers what happens after:
-sensors that silently go blind, APIs that report `saved` and change nothing, backups
-nobody has restored, and alerts that drown in broadcast noise.
+For years, I put my energy into cybersecurity and threat intelligence professionally. Then I’d come home after a long day and use the modem and router my ISP provided without thinking twice about it. Network visibility, IoT segmentation, firewall policies—all things I advocated for at work—weren’t getting the same attention on my own network.
 
-- **Every control is checked, not assumed** - each collector has a heartbeat or a
-  silence-detection rule, so "no alerts" and "sensor dead" look different.
-- **Every write is read back** - including the patched OPNsense MCP server, whose upstream
-  version reports success for writes it discards.
-- **Review before enabling automation** - some installers enable jobs after their built-in checks; inspect their settings before running them.
+Once I started digging into my home setup, I became frustrated with how little visibility and control the equipment gave me. I wanted to understand what my devices were doing, separate them appropriately, and verify that my security controls actually worked. So I decided to build it myself using open-source tools.
+
+Cydex grew out of that effort. This repository shares the architecture, configurations, automation, and lessons learned in a fictional reference environment that others can study and adapt.
+
+This is definitely not for everybody. It assumes you’re comfortable with networking, writing firewall rules, and troubleshooting when something breaks. It takes ongoing maintenance, and a mistake can disrupt your home network. If you’re looking for a plug-and-play security appliance, this isn’t one.
+
+If you want to understand and take responsibility for how your network is secured, I hope the work here gives you a useful starting point—including the mistakes and limitations, not just the finished diagrams.
 
 ## What makes it different
 
