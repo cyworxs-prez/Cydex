@@ -1,0 +1,5 @@
+# /etc/default/zeek-span - read by zeek-span-apply.sh (boot unit and VM hookscript)
+FW_VMID=200            # OPNsense VM ID
+MIRROR_SRC=tap200i1    # OPNsense LAN-trunk tap:  tap<FW_VMID>i<trunk NIC index>
+MIRROR_DST=veth206i1   # Zeek capture veth:       veth<ZEEK_CTID>i<capture NIC index>
+WAIT_SECS=180          # how long to wait for both interfaces to exist

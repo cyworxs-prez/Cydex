@@ -22,14 +22,27 @@ Keep `networks.cfg` complete. A missing segment is labelled external and every
 The firewall's LAN trunk tap is mirrored, ingress + egress, into the sensor's capture veth
 with `tc mirred`. That is runtime state, so it is installed twice over:
 
-| Piece | Covers | Install |
-|---|---|---|
-| `zeek-mirror.service` | Host boot | `MIRROR_SRC=tap200i1 MIRROR_DST=veth206i1 bash proxmox/zeek-mirror/install-zeek-mirror.sh` then `systemctl start zeek-mirror` |
-| `vm200-span.pl` hookscript | Firewall VM restart (the tap is destroyed and recreated) | Copy to `/var/lib/vz/snippets/`, then `qm set 200 --hookscript local:snippets/vm200-span.pl` |
+| Piece | Covers |
+|---|---|
+| `/usr/local/sbin/zeek-span-apply.sh` | Applies the mirror, verifies exactly one filter per direction, logs as `zeek-span` |
+| `zeek-mirror.service` | Runs it at host boot |
+| `zeek-span.pl` hookscript | Runs it after every firewall-VM start (the tap is destroyed and recreated) |
+| `/etc/default/zeek-span` | `FW_VMID`, `MIRROR_SRC`, `MIRROR_DST` - the only place these are set |
+
+```bash
+# on the Proxmox host, from a copy of proxmox/span/
+bash install.sh                                   # installs files only
+vi /etc/default/zeek-span                         # check the three values
+/usr/local/sbin/zeek-span-apply.sh                # must print "span re-applied"
+systemctl enable zeek-mirror.service
+qm set 200 --hookscript local:snippets/zeek-span.pl
+```
+
+Find the interface names with `ip -br link | grep -E 'tap200|veth206'`: the tap index is
+the firewall VM's trunk NIC (`net1` -> `i1`), the veth index is the Zeek CT's capture NIC.
 
 Both verify the filter landed and log via `logger`; Wazuh `span_rules.xml` pages if the
-span is not applied. Edit the device names / VM ID in the hookscript if yours differ
-(`tap<VMID>i<n>`, `veth<CTID>i<n>`).
+span is not applied.
 
 Why both matter: Zeek computes capture loss from ACKs for data it never saw. A **fully**
 blind Zeek sees no ACKs either and reports 0% loss - healthy-looking. Only the span check

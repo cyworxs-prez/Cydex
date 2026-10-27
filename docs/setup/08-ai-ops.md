@@ -25,12 +25,15 @@ Put it at the root of whatever directory the agent works from. It sets:
 | `opnsense` | `@richard-stovall/opnsense-mcp-server` (npm) | Firewall, DHCP, DNS, IDS | `npm i -g @richard-stovall/opnsense-mcp-server`, then **patch it** (8.3). Launcher: `ai-ops/mcp/opnsense/run-opnsense-mcp.sh` |
 | `proxmox-plus` | `proxmox-mcp-plus` (PyPI) | VM/CT lifecycle, guest command execution (allow-listed), job queue | `ai-ops/mcp/proxmox-plus/install.sh` |
 | `proxmox-api` | `ry-ops/proxmox-mcp-server` | Full PVE API incl. **`get_node_rrddata`** (historical CPU/memory - use it instead of point-in-time samples) | Clone upstream; launch under `op run` |
-| `wazuh` | `gbrigandi/mcp-server-wazuh` | Agents, rules, alerts, manager logs | `ai-ops/mcp/wazuh/setup-wazuh-mcp.sh` |
+| `wazuh` | `gbrigandi/mcp-server-wazuh` | Agents, rules, alerts, manager logs | `ai-ops/mcp/wazuh/setup-wazuh-mcp.sh` (macOS arm64 + 1Password), or download the release binary for your platform into `ai-ops/mcp/wazuh/mcp-server-wazuh` and fill `config/wazuh.env` by hand |
 
-Launchers all follow one pattern: no secrets on disk, `op run --env-file config/<x>.env`
-resolves `op://` references at launch. For headless use they read a 1Password
-**service-account token** from the macOS Keychain (`security add-generic-password -a
-"$(id -un)" -s op-service-account -w <token>`), falling back to the desktop app.
+Both launchers read their credentials from `config/opnsense.env` / `config/wazuh.env`
+(see [configure.md §3.1](../configure.md#31-credentials-on-the-workstation)):
+`op://` references are resolved at launch by `op run`; plain values are exported
+directly (keep the file `chmod 600`). For headless use on macOS, a 1Password
+**service-account token** in the login Keychain (`security add-generic-password -a
+"$(id -un)" -s op-service-account -w <token>`) lets `op` resolve references with the
+desktop app locked.
 
 MCP client config is then just the launcher path, e.g.:
 

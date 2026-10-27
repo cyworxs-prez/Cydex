@@ -40,15 +40,14 @@ Covered in [02-opnsense.md](02-opnsense.md#28-monit-restart-suricata-on-runaway-
 1. Encrypt the USB drive with LUKS2, open it as `backup-crypt`, make a filesystem, mount it
    at `/mnt/bulk-storage`, and add it as a Proxmox **directory** storage (`bulk-storage`,
    content: backups, retention keep-last=3, keep-monthly=2).
-2. Install:
+2. Install (on the host, from a copy of `proxmox/backup/`):
    ```bash
-   install -m 750 proxmox/backup/homelab-backup.sh      /usr/local/sbin/
-   install -m 644 proxmox/backup/homelab-backup.default /etc/default/homelab-backup   # edit LUKS_DEV
-   install -m 644 proxmox/backup/homelab-backup.{service,timer} /etc/systemd/system/
-   systemctl daemon-reload && systemctl enable --now homelab-backup.timer
+   bash install.sh                          # files only; keeps an existing /etc/default/homelab-backup
+   vi /etc/default/homelab-backup           # LUKS_DEV, STORAGE, MNT, GUESTS
    ```
 3. First run by hand: `systemctl start homelab-backup` and read the newest
-   `/var/log/homelab-backup-*.log`.
+   `/var/log/homelab-backup-*.log`. Enable the timer only after a restore test
+   ([configure.md §5](../configure.md#5-before-enabling-any-automation)).
 
 | Behaviour | Detail |
 |---|---|
@@ -68,5 +67,5 @@ keys and Wazuh agent identity).
 ```bash
 systemctl list-timers opnsense-watchdog.timer homelab-backup.timer
 journalctl -t opnsense-watchdog -n 3 --no-pager
-journalctl -t vm200-span -n 3 --no-pager
+journalctl -t zeek-span -n 3 --no-pager
 ```

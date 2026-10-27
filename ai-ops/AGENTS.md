@@ -133,11 +133,12 @@ classification.
 
 Writes to a live system (approval required) — examples in this repo:
 
+- `tools/localize.py --apply` — rewrites site values across the repo (local files only).
 - `ai-ops/mcp/opnsense/patch-opnsense-mcp.js` (local package patch) and `test-mcp-fix.py`
   (flips `ids.LogPayload` 0 -> 1 and back: low impact, still a write).
 - `opnsense/monit/*.py` — create monit tests/services on OPNsense.
-- `proxmox/watchdog/install.sh`, `proxmox/zeek-mirror/install-zeek-mirror.sh`,
-  `proxmox/hookscripts/*` — host systemd units and hookscripts.
+- `proxmox/watchdog/install.sh`, `proxmox/span/*`, `proxmox/backup/*` — host systemd
+  units, the span hookscript and the backup job.
 - `zeek/intel/install.sh` — installs units and runs `zeekctl deploy`.
 - `wazuh/yara/deploy_yara.sh`, `wazuh/dashboards/*.py` — agent config, cron, saved objects.
 - `ai-ops/mcp/wazuh/setup-wazuh-mcp.sh` — writes a password-manager item.

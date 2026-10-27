@@ -31,3 +31,7 @@ __pycache__/
 
 # never keep the private sanitizer list in the repo
 *private-patterns*
+
+# localize.py state: your applied values. Commit it in your own fork so a fresh
+# clone can still re-localize after you change homelab.env.
+!config/localized.env

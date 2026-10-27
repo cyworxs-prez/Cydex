@@ -46,7 +46,8 @@ Follow in order. Each guide lists what to do, where, and how to verify it.
 
 | # | Guide | Result |
 |---|---|---|
-| 0 | [Prerequisites](docs/setup/00-prerequisites.md) | Hardware, accounts, workstation tools, repo config |
+| - | **[Configure for your network](docs/configure.md)** | **Your values everywhere; where every setting lives; pre-automation checks** |
+| 0 | [Prerequisites](docs/setup/00-prerequisites.md) | Hardware, accounts, workstation tools |
 | 1 | [Proxmox host](docs/setup/01-proxmox.md) | VLAN-aware bridge, guests created |
 | 2 | [OPNsense + VLANs](docs/setup/02-opnsense.md) | Routing, DHCP, firewall ladder, forced DNS, DNSBL, Suricata |
 | 3 | [Wi-Fi / switch](docs/setup/03-switching-wifi.md) | SSIDs mapped to VLANs, trunk ports |
@@ -72,15 +73,16 @@ greenbone/     KEV/EPSS prioritisation
 ai-ops/        MCP launchers/installers, OPNsense MCP patch, AGENTS.md policy, hunting skill
 map/           isometric network map (isoflow) + layout/render checks
 docs/          setup guides, architecture, lessons learned, runbooks
-tools/         check.sh - syntax + secret scan before every commit
+tools/         localize.py - apply your values; check.sh / export-release.sh - release gate
 ```
 
 ## Adapting it
 
-The defaults match the reference layout (`10.10.{110,120,130,140,150}.0/24`, firewall
-VM 200, Wazuh CT 201, Zeek CT 206). Change them in `config/homelab.env`; the Wazuh rule
-files carry the subnets in `<srcip>/<dstip>` elements, so grep `wazuh/rules/` for
-`10.10.` if your addressing differs.
+Everything ships set to a fictional reference layout (`10.10.{110,120,130,140,150}.0/24`,
+firewall VM 200, Wazuh CT 201, Zeek CT 206). **Start with [docs/configure.md](docs/configure.md):**
+fill in `config/homelab.env`, run `python3 tools/localize.py --apply` to write your values
+into the rules, sensor config, scripts and map, then set the host-side, credential and
+schedule settings it lists.
 
 ## Status and scope
 

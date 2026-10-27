@@ -4,14 +4,14 @@
 <group name="zeek,ids,collector_health,local,">
 
   <rule id="100890" level="0">
-    <program_name>^vm200-span$</program_name>
-    <description>Zeek span hookscript message (parent)</description>
+    <program_name>^zeek-span$</program_name>
+    <description>Zeek span mirror message (parent)</description>
   </rule>
 
   <rule id="100891" level="3">
     <if_sid>100890</if_sid>
     <match>span re-applied</match>
-    <description>Zeek span mirror re-applied after OPNsense start - sensor feed restored</description>
+    <description>Zeek span mirror applied - sensor feed restored</description>
   </rule>
 
   <rule id="100892" level="12">

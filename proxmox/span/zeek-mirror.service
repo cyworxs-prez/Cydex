@@ -1,0 +1,13 @@
+[Unit]
+Description=SPAN mirror: OPNsense LAN trunk -> Zeek sensor (boot)
+After=pve-guests.service
+Wants=pve-guests.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/zeek-span-apply.sh
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target

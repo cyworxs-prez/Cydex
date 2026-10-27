@@ -32,18 +32,12 @@ Budget RAM: firewall 10 GB, Wazuh 4 GB, Greenbone 4 GB (on demand), Zeek 2 GB, t
 
 ## Repo configuration
 
-```bash
-git clone <this repo> && cd homelab-soc
-cp config/homelab.env.example  config/homelab.env     # hosts, guest IDs, addresses
-cp config/opnsense.env.example config/opnsense.env    # OPNsense API (op:// refs)
-cp config/wazuh.env.example    config/wazuh.env       # written for you by the Wazuh MCP setup
-```
-
-All three real files are git-ignored. Keep them that way. Run `tools/check.sh` before
-every commit - it fails on secret-shaped strings.
+Do [configure.md](../configure.md) before any setup step: it creates `config/*.env`,
+localizes the repo to your addresses and IDs, and lists every setting that lives
+elsewhere. The real `config/*.env` files are git-ignored - keep them that way.
 
 ## Addressing
 
 Defaults throughout match the reference layout in [architecture.md](../architecture.md).
-If yours differs, change `config/homelab.env` and grep `wazuh/rules/` for `10.10.` -
-Wazuh rules carry literal subnets.
+Before installing anything, make the repo yours: [configure.md](../configure.md) - fill
+`config/homelab.env`, run `tools/localize.py`, and see every other place settings live.

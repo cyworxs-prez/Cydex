@@ -270,7 +270,7 @@ keyword shows the root qdisc and reports nothing - that is not evidence the mirr
 missing. Two on the egress hook means a duplicate mirror, which double-delivers every
 packet to Zeek and corrupts analysis.
 
-The `vm200-span.pl` pve hookscript re-applies both after any VM200 restart, and Wazuh
+The `zeek-span.pl` hookscript re-applies both after any firewall-VM restart, and Wazuh
 rules 100890-100892 page if it cannot.
 
 ## Writing a custom detection

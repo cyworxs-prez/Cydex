@@ -15,7 +15,7 @@ MAPNAME="${MAPNAME:-backup-crypt}"
 LUKS_DEV="${LUKS_DEV:-/dev/disk/by-id/REPLACE-part1}"
 ABORT_GIB="${ABORT_GIB:-100}"           # measure your own ratio; zstd vzdump ran ~4x here
 GREENBONE_VMID="${GREENBONE_VMID:-202}" # thinned harder - mostly re-downloadable feed data
-GUESTS="${*:-${GUESTS:-200 201 202 203 204 205 206}}"   # override: homelab-backup.sh 202 203
+GUESTS="${*:-${GUESTS:-200 201 202 203 204 205 206}}"   # override: homelab-backup.sh <id> <id> ...
 LOG="/var/log/homelab-backup-$(date +%Y%m%d-%H%M%S).log"
 
 say() { printf '\n\033[1m%s\033[0m\n' "$*" | tee -a "$LOG"; }
