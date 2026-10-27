@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="580" viewBox="0 0 1000 580" role="img" aria-label="homelab-soc architecture: segments route through OPNsense; a SPAN mirror feeds Zeek; agents and syslog feed Wazuh, which pages via ntfy; host-side watchdog, span and backup jobs report to Wazuh; MCP servers give an AI agent read-first access under an agent policy">
+  <title>homelab-soc architecture</title>
+  <style>
+    .card{fill:#ffffff;stroke:#cbd5e1;stroke-width:1.5}
+    .h{font:700 15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;fill:#0f172a}
+    .t{font:13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;fill:#334155}
+    .s{font:12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;fill:#64748b}
+    .pill{font:600 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;fill:#ffffff}
+    .flow{stroke:#475569;stroke-width:2;fill:none;marker-end:url(#a)}
+    .span{stroke:#db2777;stroke-width:2.5;fill:none;stroke-dasharray:7 5;marker-end:url(#ap)}
+    .tele{stroke:#0d9488;stroke-width:2;fill:none;stroke-dasharray:3 4;marker-end:url(#at)}
+    .ai{stroke:#7c3aed;stroke-width:2;fill:none;marker-end:url(#aa)}
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#db2777"/></marker>
+    <marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0d9488"/></marker>
+    <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7c3aed"/></marker>
+  </defs>
+  <rect x="0" y="0" width="1000" height="580" rx="18" fill="#f8fafc"/>
+
+  <!-- segments -->
+  <rect class="card" x="24" y="24" width="190" height="292" rx="12"/>
+  <text class="h" x="40" y="52">Segments</text>
+  <g>
+    <rect x="40" y="68" width="158" height="34" rx="8" fill="#2563eb"/><text class="pill" x="52" y="90">TRUSTED · VPN egress</text>
+    <rect x="40" y="110" width="158" height="34" rx="8" fill="#ea580c"/><text class="pill" x="52" y="132">IoT · DNS forced</text>
+    <rect x="40" y="152" width="158" height="34" rx="8" fill="#7c3aed"/><text class="pill" x="52" y="174">MGMT · host, APs</text>
+    <rect x="40" y="194" width="158" height="34" rx="8" fill="#16a34a"/><text class="pill" x="52" y="216">LAB · SOC guests</text>
+    <rect x="40" y="236" width="158" height="34" rx="8" fill="#0891b2"/><text class="pill" x="52" y="258">DIRECT · no VPN</text>
+  </g>
+  <text class="s" x="40" y="298">one /24 + VLAN each</text>
+
+  <!-- firewall -->
+  <rect class="card" x="270" y="24" width="220" height="166" rx="12"/>
+  <text class="h" x="286" y="52">OPNsense (VM)</text>
+  <text class="t" x="286" y="78">routing + rule ladders</text>
+  <text class="t" x="286" y="100">Kea DHCP · Unbound + DNSBL</text>
+  <text class="t" x="286" y="122">Suricata IDS (Hyperscan)</text>
+  <text class="t" x="286" y="144">WireGuard for TRUSTED</text>
+  <text class="s" x="286" y="172">monit restarts Suricata</text>
+  <path class="flow" d="M214 170 H266"/>
+
+  <!-- internet -->
+  <rect class="card" x="548" y="24" width="150" height="70" rx="12"/>
+  <text class="h" x="564" y="52">Internet</text>
+  <text class="s" x="564" y="76">ISP · VPN provider</text>
+  <path class="flow" d="M490 60 H544"/>
+
+  <!-- zeek -->
+  <rect class="card" x="270" y="230" width="220" height="140" rx="12"/>
+  <text class="h" x="286" y="258">Zeek sensor (LXC)</text>
+  <text class="t" x="286" y="284">full-trunk SPAN, JSON logs</text>
+  <text class="t" x="286" y="306">Intel framework, daily IOCs</text>
+  <text class="t" x="286" y="328">hunting scripts + skill</text>
+  <text class="s" x="286" y="352">capture-loss + span health</text>
+  <path class="span" d="M380 190 V226"/>
+  <text class="s" x="390" y="214" fill="#db2777">tc mirred SPAN</text>
+
+  <!-- wazuh -->
+  <rect class="card" x="548" y="150" width="220" height="190" rx="12"/>
+  <text class="h" x="564" y="178">Wazuh SIEM (LXC)</text>
+  <text class="t" x="564" y="204">~100 custom rules</text>
+  <text class="t" x="564" y="226">Sigma → Wazuh, YARA</text>
+  <text class="t" x="564" y="248">segmentation, intel,</text>
+  <text class="t" x="564" y="270">collector-health rules</text>
+  <text class="t" x="564" y="292">dashboards</text>
+  <text class="s" x="564" y="322">level ≥ 10 pages</text>
+  <path class="tele" d="M490 130 C520 130 520 190 544 190"/>
+  <path class="tele" d="M490 300 C520 300 520 270 544 270"/>
+  <text class="s" x="496" y="120" fill="#0d9488">EVE + filterlog</text>
+  <text class="s" x="496" y="320" fill="#0d9488">Zeek logs</text>
+
+  <!-- ntfy -->
+  <rect class="card" x="826" y="200" width="150" height="90" rx="12"/>
+  <text class="h" x="842" y="228">ntfy → phone</text>
+  <text class="s" x="842" y="252">custom-ntfy</text>
+  <text class="s" x="842" y="272">integration</text>
+  <path class="flow" d="M768 245 H822"/>
+
+  <!-- host jobs -->
+  <rect class="card" x="24" y="392" width="466" height="166" rx="12"/>
+  <text class="h" x="40" y="420">Proxmox host</text>
+  <text class="t" x="40" y="446">firewall-VM watchdog (3 probes, guarded recovery)</text>
+  <text class="t" x="40" y="468">span apply: boot unit + VM hookscript</text>
+  <text class="t" x="40" y="490">weekly vzdump → LUKS, checksum read-back</text>
+  <text class="t" x="40" y="512">Greenbone · NetAlertX · Guacamole · Kali</text>
+  <text class="s" x="40" y="540">every job logs a tag; silence and failure both alert</text>
+  <path class="tele" d="M490 430 C520 430 520 370 590 344"/>
+  <text class="s" x="496" y="420" fill="#0d9488">journald</text>
+
+  <!-- ai ops -->
+  <rect class="card" x="548" y="392" width="428" height="166" rx="12"/>
+  <text class="h" x="564" y="420">AI operations</text>
+  <text class="t" x="564" y="446">MCP → OPNsense (patched) · Proxmox · Wazuh</text>
+  <text class="t" x="564" y="468">AGENTS.md: read-first, approval list, change gate</text>
+  <text class="t" x="564" y="490">hunting skill · scheduled read-only reviews</text>
+  <text class="s" x="564" y="540">credentials resolved at launch (op://), never on disk</text>
+  <path class="ai" d="M760 392 V346"/>
+  <text class="s" x="770" y="374" fill="#7c3aed">MCP (read-first)</text>
+</svg>
