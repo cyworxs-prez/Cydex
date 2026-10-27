@@ -40,7 +40,7 @@ nobody has restored, and alerts that drown in broadcast noise.
   silence-detection rule, so "no alerts" and "sensor dead" look different.
 - **Every write is read back** - including the patched OPNsense MCP server, whose upstream
   version reports success for writes it discards.
-- **Automation is earned** - nothing enables itself; each timer has a check to pass first.
+- **Review before enabling automation** - some installers enable jobs after their built-in checks; inspect their settings before running them.
 
 ## What makes it different
 
@@ -60,11 +60,17 @@ nobody has restored, and alerts that drown in broadcast noise.
    a managed switch, multi-SSID APs. [Details](docs/setup/00-prerequisites.md).
 2. **Make it yours**
    ```bash
-   git clone <your fork> && cd cydex
-   cp config/homelab.env.example config/homelab.env     # your subnets, VLANs, IPs, guest IDs
+   git clone https://github.com/cyworxs-prez/Cydex.git cydex
+   cd cydex
+   umask 077
+   test -f config/homelab.env || cp config/homelab.env.example config/homelab.env
+   # Edit config/homelab.env with your own subnets, VLANs, IPs and guest IDs FIRST.
+   python3 tools/localize.py                            # preview; no files changed
    python3 tools/localize.py --apply                    # writes them into rules, configs, scripts, map
    python3 tools/localize.py --check                    # OK - every file matches
    ```
+   Use a private deployment copy: localization writes your network details into tracked
+   files. Do not push those changes to a public fork.
    Then set the credentials, host-side files and schedules listed in
    [docs/configure.md](docs/configure.md).
 3. **Build the base** - [Proxmox](docs/setup/01-proxmox.md) -> [OPNsense + VLANs](docs/setup/02-opnsense.md) -> [switch / Wi-Fi](docs/setup/03-switching-wifi.md).
@@ -129,12 +135,13 @@ nobody has restored, and alerts that drown in broadcast noise.
 
 ## Safety model
 
-This repo touches firewalls, hypervisors and SIEMs. It is built so nothing acts on its own
-and nothing leaks by accident.
+This repo touches firewalls, hypervisors and SIEMs. Configure and review each component
+before running its installer or enabling its scheduled actions.
 
 - **Read before run.** Several scripts write to live systems; `ai-ops/AGENTS.md` lists them.
   Snapshot first and test on one host.
-- **No automation enables itself.** Each timer and automatic action has a check to pass first
+- **Check installer behavior.** Some installers enable timers, cron jobs or live actions
+  in the same run. Review the checks and enable steps first
   ([configure.md §5](docs/configure.md#5-before-enabling-any-automation)).
 - **Agents are read-first.** The agent policy requires explicit approval for any change to
   the firewall, switch, hypervisor, SIEM, sensor or DNS; unattended runs stay read-only.
