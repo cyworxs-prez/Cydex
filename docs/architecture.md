@@ -32,9 +32,9 @@ One Proxmox node.
 | opnsense | 200 | VM (FreeBSD) | Firewall, router, DHCP, DNS, IDS | .1 on each VLAN |
 | wazuh | 201 | LXC | SIEM manager + indexer + dashboard | 10.10.140.11 |
 | greenbone | 202 | LXC (docker) | Vulnerability scanner, on demand | 10.10.140.12 |
-| netalertx | 203 | LXC | Device discovery | 10.10.140.13 |
+| netalertx | 203 | LXC | Device discovery, LAB only ([10](setup/10-netalertx.md)) | 10.10.140.13 |
 | kali | 204 | VM | Offensive tooling, stopped by default | - |
-| guac | 205 | LXC | Apache Guacamole remote-access gateway | 10.10.140.20 |
+| guac | 205 | LXC | Apache Guacamole console gateway, reaches LAB only ([11](setup/11-guacamole.md)) | 10.10.140.20 |
 | zeek | 206 | LXC | Network sensor | 10.10.140.21 |
 
 The Proxmox host is `10.10.130.10` on MGMT (`vmbr1.130`). Sizing: [00-prerequisites.md](setup/00-prerequisites.md).

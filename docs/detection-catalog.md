@@ -40,7 +40,7 @@ Decoders: `opnsense_decoders.xml` (filterlog CSV), `suricata_syslog_decoders.xml
 | 100866 / 100867 | 10 | Firewall VM down + watchdog in cooldown / watchdog force-recovering |
 | 100868 / 100869 / 100870 | 12 | Recovery start failed / VM did not return / daily cap hit |
 | 100882 | 12 | Weekly backup failed - archives not verified |
-| 100932 / 100934 | 10 | Guacamole brute force / lockout tripped |
+| 100932 / 100934 | 10 | Guacamole brute force / lockout tripped. Needs the agent `<localfile>` in `wazuh/agent/guacamole-localfile.xml`, otherwise silent |
 
 ## Design patterns used throughout
 

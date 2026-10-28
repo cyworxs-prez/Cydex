@@ -45,9 +45,9 @@ A public fallback resolver silently bypasses your DNS filtering and logging.
 | 200 | opnsense | VM, OPNsense ISO | 4 / 10 GB / 32 GB | net0 `vmbr0` (WAN), net1 `vmbr1` (trunk, no tag). Enable **QEMU guest agent** |
 | 201 | wazuh | LXC Debian, unprivileged, `nesting=1` | 3 / 4 GB / 50 GB+ | `vmbr1` tag 140, 10.10.140.11 |
 | 202 | greenbone | LXC Debian, docker (`nesting=1,keyctl=1`) | 2 / 4 GB / 64 GB | `vmbr1` tag 140, .12 |
-| 203 | netalertx | LXC | 1 / 1 GB | `vmbr1` tag 140, .13 |
+| 203 | netalertx | LXC Debian, docker (`nesting=1,keyctl=1`) | 1 / 1 GB / 8 GB | `vmbr1` tag 140, .13 - **one NIC only** ([10](10-netalertx.md)) |
 | 204 | kali | VM, onboot=0 | 2 / 4 GB | `vmbr1` tag 140 |
-| 205 | guac | LXC | 2 / 2 GB | `vmbr1` tag 140, .20 |
+| 205 | guac | LXC Debian, docker (`nesting=1,keyctl=1`) | 2 / 2 GB / 8 GB | `vmbr1` tag 140, .20 ([11](11-guacamole.md)) |
 | 206 | zeek | LXC Debian, unprivileged | 2 / 2 GB | net0 `vmbr1` tag 140 .21; **net1 `vmbrspan`, no IP** (capture) |
 
 Set `onboot: 1` on the firewall and Wazuh. Start order: firewall first.

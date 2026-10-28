@@ -1,0 +1,13 @@
+<!--
+  Wazuh AGENT config for the Guacamole CT (205) - not a manager rule file.
+  Append inside <ossec_config> in /var/ossec/etc/ossec.conf on that agent, then
+  `systemctl restart wazuh-agent`. Without it, rules 100930-100934 never fire.
+
+  Reads every container's json-file log. guacd and postgres lines decode too but match
+  no rule (archived, never alerted). Rotation (max-size in the compose file) is handled:
+  the agent follows the active *-json.log.
+-->
+<localfile>
+  <log_format>json</log_format>
+  <location>/var/lib/docker/containers/*/*-json.log</location>
+</localfile>

@@ -1,0 +1,53 @@
+# Apache Guacamole console gateway (CT 205). Run from /opt/guac inside the CT.
+# Setup, first login and hardening: docs/setup/11-guacamole.md
+#
+#   guacd     - protocol proxy (RDP/SSH/VNC). Not published; only the web app talks to it.
+#   postgres  - users, connections, TOTP keys. Not published.
+#   guacamole - Tomcat web app on :8080, served at /guacamole/
+#
+# Logs stay on Docker's json-file driver on purpose: the Wazuh agent reads them from
+# /var/lib/docker/containers/*/*-json.log (wazuh/agent/guacamole-localfile.xml), and the
+# Guacamole rules in zz_audit_tuning.xml expect that JSON shape (`log` field).
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+services:
+  guacd:
+    image: guacamole/guacd:1.6.0
+    restart: unless-stopped
+    logging: *logging
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: guacamole_db
+      POSTGRES_USER: guacamole_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d:ro   # schema, applied on FIRST start only
+      - pgdata:/var/lib/postgresql/data
+    logging: *logging
+
+  guacamole:
+    image: guacamole/guacamole:1.6.0
+    restart: unless-stopped
+    depends_on: [guacd, postgres]
+    ports:
+      - "8080:8080"
+    environment:
+      GUACD_HOSTNAME: guacd
+      POSTGRESQL_HOSTNAME: postgres
+      POSTGRESQL_DATABASE: guacamole_db
+      POSTGRESQL_USERNAME: guacamole_user
+      POSTGRESQL_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      TOTP_ENABLED: ${TOTP_ENABLED:-true}
+      # Brute-force ban (extension is on by default in the image). Wazuh pages at 3
+      # failures in 5 min (rule 100932), before this trips at 5 (rule 100934).
+      BAN_MAX_INVALID_ATTEMPTS: ${BAN_MAX_INVALID_ATTEMPTS:-5}
+      BAN_ADDRESS_DURATION: ${BAN_ADDRESS_DURATION:-300}
+    logging: *logging
+
+volumes:
+  pgdata:

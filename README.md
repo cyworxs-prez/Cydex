@@ -76,7 +76,7 @@ If you want to understand and take responsibility for how your network is secure
 3. **Build the base** - [Proxmox](docs/setup/01-proxmox.md) -> [OPNsense + VLANs](docs/setup/02-opnsense.md) -> [switch / Wi-Fi](docs/setup/03-switching-wifi.md).
 4. **Add the SOC** - [Wazuh](docs/setup/04-wazuh.md) -> [Zeek](docs/setup/05-zeek.md) -> [self-healing + backup](docs/setup/06-resilience.md) -> [Greenbone](docs/setup/07-greenbone.md).
 5. **Turn on automation only after its check passes** - [configure.md §5](docs/configure.md#5-before-enabling-any-automation).
-6. **Optional** - [AI operations](docs/setup/08-ai-ops.md), [network map](docs/setup/09-network-map.md).
+6. **Optional** - [AI operations](docs/setup/08-ai-ops.md), [network map](docs/setup/09-network-map.md), [NetAlertX](docs/setup/10-netalertx.md), [Guacamole](docs/setup/11-guacamole.md).
 
 ## Components
 
@@ -98,6 +98,8 @@ If you want to understand and take responsibility for how your network is secure
 | Detection content | [SigmaHQ](https://github.com/SigmaHQ/sigma) ![stars](https://img.shields.io/github/stars/SigmaHQ/sigma?style=flat) · [YARA-Forge](https://github.com/YARAHQ/yara-forge) | Faithful-or-skip Sigma -> Wazuh converter; YARA deploy with test-compile and heartbeat | [04](docs/setup/04-wazuh.md#46-sigma---wazuh-zeek) |
 | Paging | [ntfy](https://github.com/binwiederhier/ntfy) ![stars](https://img.shields.io/github/stars/binwiederhier/ntfy?style=flat) | Wazuh integration script, level-based priority | [04](docs/setup/04-wazuh.md#44-paging-ntfy) |
 | Vulnerability scanning | [Greenbone Community](https://github.com/greenbone) | Findings ranked by CISA KEV + FIRST EPSS; scanner noise demoted, not paged | [07](docs/setup/07-greenbone.md) |
+| Device discovery | [NetAlertX](https://github.com/netalertx/NetAlertX) ![stars](https://img.shields.io/github/stars/netalertx/NetAlertX?style=flat) | LAB-only, single-NIC design that doesn't punch through segmentation; opt-in ICMP status with a scoped rule; beacon-hunt exclusion | [10](docs/setup/10-netalertx.md) |
+| Console gateway | [Apache Guacamole](https://github.com/apache/guacamole-client) ![stars](https://img.shields.io/github/stars/apache/guacamole-client?style=flat) | Pinned compose with Postgres + TOTP, reaches LAB only, Docker logs to Wazuh, pages on brute force before the ban trips | [11](docs/setup/11-guacamole.md) |
 
 ### Resilience
 
@@ -171,9 +173,10 @@ config/    homelab.env (your values) + credential env examples
 tools/     localize.py (apply your values) · check.sh / export-release.sh (release gate)
 proxmox/   host side: watchdog, span keeper, backup, guest helpers
 opnsense/  API helper, read-only verification scripts, monit setup, Wazuh agent config
-wazuh/     rules, decoders, ntfy integration, YARA, Sigma converter, dashboards
+wazuh/     rules, decoders, agent snippets, ntfy integration, YARA, Sigma converter, dashboards
 zeek/      sensor config, Intel feeds + updater, hunting scripts
 greenbone/ KEV/EPSS prioritisation
+lab/       compose files for NetAlertX and Guacamole
 ai-ops/    MCP launchers and installers, OPNsense MCP patch, AGENTS.md, hunting skill
 map/       isometric network map + layout/render checks
 docs/      configure, architecture, setup guides, detection catalog, lessons, runbooks

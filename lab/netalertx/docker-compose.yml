@@ -1,0 +1,35 @@
+# NetAlertX for the LAB discovery container (CT 203). Run from /opt/netalertx inside the CT.
+#
+# Based on the upstream baseline compose (docs/DOCKER_COMPOSE.md in netalertx/NetAlertX),
+# with one change: the `sysctls:` block is removed. Docker refuses net.* sysctls in the
+# host network namespace, and inside an LXC that namespace is the container's own - set
+# them in the CT instead (docs/setup/10-netalertx.md, step 10.1).
+#
+# Pin the image after the first pull:  docker inspect --format '{{index .RepoDigests 0}}' \
+#   ghcr.io/netalertx/netalertx:latest   -> replace the tag below with that @sha256 digest.
+services:
+  netalertx:
+    container_name: netalertx
+    image: ghcr.io/netalertx/netalertx:latest
+    network_mode: host                    # ARP scanning needs layer 2 on the CT's eth0
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    cap_add:
+      - NET_ADMIN                         # arp-scan
+      - NET_RAW                           # raw sockets (arp-scan, fping)
+      - NET_BIND_SERVICE                  # nbtscan
+      - CHOWN                             # entrypoint chowns /data and /tmp, then drops root
+      - SETUID
+      - SETGID
+    volumes:
+      - /opt/netalertx/data:/data         # /data/config/app.conf and /data/db
+      - /etc/localtime:/etc/localtime:ro
+    tmpfs:
+      - "/tmp:uid=20211,gid=20211,mode=1700,rw,noexec,nosuid,nodev,async,noatime,nodiratime"
+    environment:
+      PORT: 20211                         # web UI
+      GRAPHQL_PORT: 20212                 # API backend - not a second UI
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
