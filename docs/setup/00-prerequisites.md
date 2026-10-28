@@ -15,6 +15,32 @@ on all of them.
 | Backup drive | USB or internal disk, encrypted with LUKS | any | - |
 | Phone | Push notifications | any (ntfy app) | - |
 
+### Reference build (what this repo runs on)
+
+One example that meets the table above. Not an endorsement, and not the only option.
+
+| Role | Hardware | Notes |
+|---|---|---|
+| Hypervisor host | AMD mini PC with 2 RJ45 ports ([Amazon](https://www.amazon.com/dp/B0GQTCBV78)) | Proxmox VE 9. NIC0 = WAN, NIC1 = LAN trunk |
+| RAM | 16 GB stock + 8 GB added, DDR4 SO-DIMM (24 GB) | Before the upgrade Proxmox saw only 12.6 GB (iGPU reservation, below); after, ~23 GB |
+| Boot / guest storage | 512 GB NVMe (PCIe 3.0), stock | Holds Proxmox and all guests |
+| Backup drive | 1 TB HDD over USB ([enclosure](https://a.co/d/07dxemXj)) | LUKS-encrypted; weekly vzdump target ([06](06-resilience.md#64-weekly-encrypted-backup)) |
+| Switch | Ubiquiti UniFi USW Lite 8 PoE | Port 1 = trunk to the host; PoE powers the APs |
+| Access points | 2x Ubiquiti UniFi U7 Lite | One SSID per VLAN |
+| Router / firewall | OPNsense VM on the host | No hardware gateway |
+
+Lessons from this hardware:
+
+- **Add the RAM before building.** The firewall VM had an out-of-memory outage at 6 GB
+  and now runs at 10 GB (Suricata needs the headroom). That, plus Wazuh and the rest,
+  only fits after the upgrade. Run a full memtest86+ pass on any added module before you
+  trust guests to it: bad non-ECC RAM corrupts guests silently.
+- **Shrink the iGPU's memory reservation.** AMD integrated graphics reserve system RAM.
+  UEFI: **Advanced -> AMD CBS -> NBIO -> GFX Configuration -> UMA Frame Buffer Size** ->
+  minimum (if your firmware shows it). A headless host doesn't need it.
+- **A USB HDD is slow but fine for weekly backups.** Size it from measured vzdump output.
+  The backup script checks free space first (`ABORT_GIB`).
+
 **Vendor gateway?** If your switch/AP vendor also sells a gateway (Omada router, UniFi
 gateway, Meraki MX), it is **not** the router here: OPNsense routes and filters every
 segment. Leave the gateway out, or put it upstream as a plain ISP edge. Its controller
