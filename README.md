@@ -12,7 +12,7 @@
   <img alt="OPNsense" src="https://img.shields.io/badge/OPNsense-firewall%20%2B%20IDS-D94F00">
   <img alt="Wazuh 4.14" src="https://img.shields.io/badge/Wazuh-4.14-3595F9">
   <img alt="Zeek" src="https://img.shields.io/badge/Zeek-sensor-4B5563">
-  <img alt="MCP" src="https://img.shields.io/badge/MCP-OPNsense%20%7C%20Proxmox%20%7C%20Wazuh-7C3AED">
+  <img alt="MCP" src="https://img.shields.io/badge/MCP-OPNsense%20%7C%20Proxmox%20%7C%20Wazuh%20%7C%20UniFi-7C3AED">
 </p>
 
 <p align="center">
@@ -50,14 +50,17 @@ If you want to understand and take responsibility for how your network is secure
 | Sensors that stay honest | SPAN mirror re-applied at boot and on VM restart, verified, and alerted on; capture-loss *and* total-blindness detection |
 | Self-healing with limits | Firewall watchdog needs three independent probes to fail, with cooldown and a daily cap; monit restarts Suricata only on runaway memory |
 | Backups you can trust | Weekly encrypted vzdump, checksums recorded once, every archive re-read, failure pages with the reason |
-| AI access with guardrails | MCP servers for OPNsense, Proxmox and Wazuh, plus an agent policy (`AGENTS.md`): read-first, approval list, change gate |
+| AI access with guardrails | MCP servers for OPNsense, Proxmox and Wazuh (UniFi optional), plus an agent policy (`AGENTS.md`): read-first, approval list, change gate |
 | One config file | `config/homelab.env` + `tools/localize.py` set addresses, VLANs and guest IDs everywhere |
 | Safe to publish | `tools/check.sh` and `tools/export-release.sh` gate releases: secrets, private patterns, git objects, images |
 
 ## Quick Start
 
 1. **Check prerequisites** - one x86 host with 2 NICs (8+ cores, 24 GB+ to run everything),
-   a managed switch, multi-SSID APs. [Details](docs/setup/00-prerequisites.md).
+   a managed switch, multi-SSID APs. Any vendor works: see the
+   [hardware table](docs/setup/00-prerequisites.md#hardware) and the
+   [reference build](docs/setup/00-prerequisites.md#reference-build-what-this-repo-runs-on)
+   this repo runs on.
 2. **Make it yours**
    ```bash
    git clone https://github.com/cyworxs-prez/Cydex.git cydex
@@ -159,7 +162,8 @@ before running its installer or enabling its scheduled actions.
 | --- | --- |
 | Make the repo match your network | [Configure for your network](docs/configure.md) |
 | Understand the segments, hosts and data flows | [Architecture](docs/architecture.md) |
-| Build it step by step | [Setup guides 00-09](docs/setup/) |
+| Choose hardware (or copy the reference build) | [Prerequisites](docs/setup/00-prerequisites.md#hardware) |
+| Build it step by step | [Setup guides 00-11](docs/setup/) |
 | Know what each Wazuh rule does and what pages | [Detection catalog](docs/detection-catalog.md) |
 | Avoid the failures this design is built around | [Lessons learned](docs/lessons-learned.md) |
 | Add a VPN-free segment | [Runbook](docs/runbooks/vpn-free-segment.md) |
@@ -212,3 +216,4 @@ Built on, not bundled:
 | Apache Guacamole | Apache-2.0 |
 | ntfy | Apache-2.0 / GPL-2.0 |
 | opnsense-mcp-server · ProxmoxMCP-Plus · proxmox-mcp-server · mcp-server-wazuh · isoflow | MIT |
+| unifi-mcp-server (optional) | Apache-2.0 |
