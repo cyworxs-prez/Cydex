@@ -1,14 +1,41 @@
 # 0. Prerequisites
 
-## Hardware (recommended)
+## Hardware
 
-| Item | Notes |
-|---|---|
-| One x86 host, 2 NICs | 8+ cores / 24 GB+ to run every guest at once. NIC0 = WAN, NIC1 = LAN trunk |
-| Managed switch | 802.1Q trunks + per-port VLAN profiles |
-| 1-2 Wi-Fi APs | Multiple SSIDs, each mapped to a VLAN |
-| USB drive for backups | Encrypted with LUKS. Size it from measured vzdump output, not guesses |
-| Phone | For ntfy push notifications |
+Cydex is vendor-neutral. Each role needs a capability, not a brand. The example product
+lines are illustrative (alphabetical); none are required, and the repo was not tested
+on all of them.
+
+| Role | Must support | Example product lines | Optional MCP server (AI ops) |
+|---|---|---|---|
+| Hypervisor host | x86-64, VT-x/AMD-V, **2 NICs** (WAN + LAN trunk), 8+ cores, 24 GB+ RAM | any mini PC / small server | Proxmox - [08](08-ai-ops.md#82-mcp-servers) (used here) |
+| Router / firewall | Runs as the **OPNsense VM** on the host. The rule ladders, Suricata and the Wazuh agent assume OPNsense | - | OPNsense - [08](08-ai-ops.md#82-mcp-servers) (used here) |
+| Managed switch | 802.1Q trunks, per-port native VLAN, enough ports for host + APs + wired devices | Cisco Meraki MS, MikroTik CRS, TP-Link Omada, Ubiquiti UniFi | see below |
+| Wi-Fi access points | Multiple SSIDs, each mapped to a VLAN tag; WPA3 | Cisco Meraki MR, MikroTik cAP, TP-Link Omada EAP, Ubiquiti UniFi | see below |
+| Backup drive | USB or internal disk, encrypted with LUKS | any | - |
+| Phone | Push notifications | any (ntfy app) | - |
+
+**Vendor gateway?** If your switch/AP vendor also sells a gateway (Omada router, UniFi
+gateway, Meraki MX), it is **not** the router here: OPNsense routes and filters every
+segment. Leave the gateway out, or put it upstream as a plain ISP edge. Its controller
+software can still manage the switch and APs.
+
+### Switch / AP controller MCP servers
+
+Only relevant if you use that vendor's switches, APs or gateway. Each one lets an AI agent
+read (and, if you let it, change) the controller - networks, WLANs, clients, port
+profiles. `ai-ops/AGENTS.md` already requires approval for any controller change.
+
+| Vendor | MCP server | Status in this repo |
+|---|---|---|
+| Ubiquiti UniFi | [enuno/unifi-mcp-server](https://github.com/enuno/unifi-mcp-server) (PyPI `unifi-mcp-server`) | **Tested.** Launcher + config included - [08](08-ai-ops.md#82-mcp-servers) |
+| Cisco Meraki | [CiscoDevNet/cisco-meraki-mcp-official](https://github.com/CiscoDevNet/cisco-meraki-mcp-official) | Not tested |
+| TP-Link Omada | [MiguelTVMS/tplink-omada-mcp](https://github.com/MiguelTVMS/tplink-omada-mcp) | Not tested |
+| MikroTik | [vesact/mikrotik-mcp](https://github.com/vesact/mikrotik-mcp) | Not tested |
+
+For an untested server: read its code before you run it, launch it read-only first, and
+give it the narrowest credential the controller allows. Wrap it the same way as the
+others (`ai-ops/mcp/_launch-lib.sh` + a `config/<name>.env`).
 
 Budget RAM: firewall 10 GB, Wazuh 4 GB, Greenbone 4 GB (on demand), Zeek 2 GB, the rest
 1-2 GB each, plus 2-3 GB for the host.

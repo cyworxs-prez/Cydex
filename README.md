@@ -87,7 +87,7 @@ If you want to understand and take responsibility for how your network is secure
 | Hypervisor | [Proxmox VE](https://www.proxmox.com/en/proxmox-virtual-environment) | VLAN-aware bridge layout, guest plan, helper scripts that run code in guests without quoting bugs | [01](docs/setup/01-proxmox.md) |
 | Firewall / router | [OPNsense](https://github.com/opnsense/core) ![stars](https://img.shields.io/github/stars/opnsense/core?style=flat) | Per-segment rule ladder, forced DNS for IoT, DoT/DoQ block, VPN egress for one segment only | [02](docs/setup/02-opnsense.md) |
 | IDS | [Suricata](https://github.com/OISF/suricata) ![stars](https://img.shields.io/github/stars/OISF/suricata?style=flat) | Memory-safe settings (Hyperscan + Low profile), monit restart, EVE to Wazuh | [02](docs/setup/02-opnsense.md#26-suricata-ids) |
-| Wi-Fi / switching | any 802.1Q gear | SSID-to-VLAN plan, the two-trunk rule for adding VLANs | [03](docs/setup/03-switching-wifi.md) |
+| Wi-Fi / switching | any 802.1Q gear ([hardware table](docs/setup/00-prerequisites.md#hardware)) | SSID-to-VLAN plan, the two-trunk rule for adding VLANs | [03](docs/setup/03-switching-wifi.md) |
 
 ### Detection and response
 
@@ -116,6 +116,7 @@ If you want to understand and take responsibility for how your network is secure
 | OPNsense MCP | [opnsense-mcp-server](https://github.com/Pixelworlds/opnsense-mcp-server) ![stars](https://img.shields.io/github/stars/Pixelworlds/opnsense-mcp-server?style=flat) | Patch for silent write failures + live read-back test; launcher with 1Password or plain env | [08](docs/setup/08-ai-ops.md#83-the-opnsense-mcp-patch---silent-write-failure) |
 | Proxmox MCP | [ProxmoxMCP-Plus](https://github.com/RekklesNA/ProxmoxMCP-Plus) ![stars](https://img.shields.io/github/stars/RekklesNA/ProxmoxMCP-Plus?style=flat) · [proxmox-mcp-server](https://github.com/ry-ops/proxmox-mcp-server) | Pinned install, credentials from 1Password, command allow-list | [08](docs/setup/08-ai-ops.md#82-mcp-servers) |
 | Wazuh MCP | [mcp-server-wazuh](https://github.com/gbrigandi/mcp-server-wazuh) ![stars](https://img.shields.io/github/stars/gbrigandi/mcp-server-wazuh?style=flat) | Setup that verifies credentials live before storing them; read-only indexer user | [08](docs/setup/08-ai-ops.md#82-mcp-servers) |
+| UniFi MCP *(optional)* | [unifi-mcp-server](https://github.com/enuno/unifi-mcp-server) ![stars](https://img.shields.io/github/stars/enuno/unifi-mcp-server?style=flat) | Only if your switch/APs/gateway are UniFi. Pinned install, launcher with 1Password or plain env, analytics forced off. Other vendors: [hardware table](docs/setup/00-prerequisites.md#hardware) | [08](docs/setup/08-ai-ops.md#821-unifi-optional) |
 | Agent policy | - | `AGENTS.md`: read-first default, approval list, network-change gate, secrets handling | [08](docs/setup/08-ai-ops.md#81-the-policy-first-ai-opsagentsmd) |
 | Hunting skill | adapted from [anthropic-cybersecurity-skills](https://github.com/mukul975/anthropic-cybersecurity-skills) | Zeek hunting workflow for this sensor layout | [skill](ai-ops/skills/zeek-hunting-homelab/SKILL.md) |
 

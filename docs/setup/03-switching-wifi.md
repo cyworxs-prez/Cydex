@@ -1,7 +1,7 @@
 # 3. Switch and Wi-Fi
 
-Any 802.1Q-capable switch and multi-SSID APs work. If your gear has a controller, it does
-not route - OPNsense does.
+Any 802.1Q-capable switch and multi-SSID APs work ([hardware table](00-prerequisites.md#hardware)).
+If your gear has a controller, it does not route - OPNsense does.
 
 ## 3.1 Networks (controller side)
 
