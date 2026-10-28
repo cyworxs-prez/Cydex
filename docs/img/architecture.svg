@@ -92,9 +92,10 @@
   <!-- ai ops -->
   <rect class="card" x="548" y="392" width="428" height="166" rx="12"/>
   <text class="h" x="564" y="420">AI operations</text>
-  <text class="t" x="564" y="446">MCP → OPNsense (patched) · Proxmox · Wazuh</text>
+  <text class="t" x="564" y="446">MCP → OPNsense (patched) · Proxmox · Wazuh · UniFi*</text>
   <text class="t" x="564" y="468">AGENTS.md: read-first, approval list, change gate</text>
   <text class="t" x="564" y="490">hunting skill · scheduled read-only reviews</text>
+  <text class="s" x="564" y="518">* optional, UniFi switch/APs only</text>
   <text class="s" x="564" y="540">credentials resolved at launch (op://), never on disk</text>
   <path class="ai" d="M760 392 V346"/>
   <text class="s" x="770" y="374" fill="#7c3aed">MCP (read-first)</text>
