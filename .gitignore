@@ -35,3 +35,6 @@ __pycache__/
 # localize.py state: your applied values. Commit it in your own fork so a fresh
 # clone can still re-localize after you change homelab.env.
 !config/localized.env
+
+# Guacamole schema generated at install time
+lab/guacamole/initdb/

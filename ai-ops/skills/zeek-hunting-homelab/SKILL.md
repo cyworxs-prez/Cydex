@@ -138,11 +138,12 @@ t=collections.defaultdict(list)
 def noisy(ip):                       # broadcast/multicast discovery beacons perfectly
     return ip.endswith('.255') or ip=='255.255.255.255' or \
            (ip.split('.')[0].isdigit() and 224 <= int(ip.split('.')[0]) <= 239)
+SKIP_SRC={'10.10.140.13'}            # NetAlertX status pings: periodic by design
 for line in open('/opt/zeek/logs/current/conn.log',errors='replace'):
     if not line.startswith('{'): continue
     try: o=json.loads(line)
     except Exception: continue
-    if noisy(o['id.resp_h']): continue
+    if noisy(o['id.resp_h']) or o['id.orig_h'] in SKIP_SRC: continue
     t[(o['id.orig_h'],o['id.resp_h'],o.get('id.resp_p'))].append(o['ts'])
 for k,v in sorted(t.items(), key=lambda x:-len(x[1])):
     if len(v)<8: continue
@@ -158,6 +159,11 @@ protocols - all of which beacon with near-zero jitter because they are
 timers, and none of which are C2. Unfiltered, the top of the list is typically all
 broadcast/multicast. A hunt that returns known noise trains you to
 ignore it.
+
+**Known periodic sources.** NetAlertX (`10.10.140.13`) pings the devices you gave it on a
+fixed schedule ([10-netalertx.md](../../../docs/setup/10-netalertx.md#105-optional-status-for-devices-on-other-segments)),
+so its flows have near-zero jitter. `SKIP_SRC` drops it. Add any other monitoring host
+you run, and nothing else: every source you skip is a place C2 could hide.
 
 ### DNS tunnelling / DGA
 

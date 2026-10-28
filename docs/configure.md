@@ -162,6 +162,7 @@ Never in the repo. Each `config/*.env` accepts either `op://` references (resolv
 | `config/opnsense.env` | `OPNSENSE_URL`, `OPNSENSE_API_KEY`, `OPNSENSE_API_SECRET` | `opnsense/scripts/*`, `opnsense/monit/*`, OPNsense MCP | `cp config/opnsense.env.example config/opnsense.env`; API key from OPNsense (System > Access > Users) |
 | `config/wazuh.env` | Wazuh API + indexer users/passwords | Wazuh MCP | `ai-ops/mcp/wazuh/setup-wazuh-mcp.sh` writes it (1Password + macOS), or copy the example and fill it in |
 | `~/.proxmoxmcp/config.json` | Proxmox API token, SSH key path | Proxmox MCP | `ai-ops/mcp/proxmox-plus/install.sh` (1Password), or fill `config.template.json` by hand |
+| `/opt/guac/.env` **on the Guacamole CT** | Postgres password, TOTP and ban settings | Guacamole compose | `cp .env.example .env`, `chmod 600`, generate the password ([11-guacamole.md](setup/11-guacamole.md#112-install)) |
 
 1Password items the examples expect, in vault `OP_VAULT` (rename freely, then update the
 references in the files above):
@@ -207,6 +208,10 @@ Check the interface names before writing `zeek-span`: `ip -br link | grep -E 'ta
 | Switch / AP controller | VLAN-only networks, port profiles, SSIDs and passphrases | [03-switching-wifi.md](setup/03-switching-wifi.md) |
 | Wazuh manager `ossec.conf` | ntfy `<integration>`, syslog receiver | [04-wazuh.md](setup/04-wazuh.md) |
 | Greenbone | admin password in `/root/.gbpw` (CT only) | [07-greenbone.md](setup/07-greenbone.md) |
+| NetAlertX UI | password (default `123456`), `SCAN_SUBNETS` = LAB only, `TIMEZONE`, optional ICMP devices and ntfy topic. Stored in `/opt/netalertx/data/config/app.conf` | [10-netalertx.md](setup/10-netalertx.md) |
+| Guacamole UI | change `guacadmin` password (Preferences page), enroll TOTP, named admin, connections | [11-guacamole.md](setup/11-guacamole.md) |
+| Guacamole CT Wazuh agent `ossec.conf` | Docker log `<localfile>` from `wazuh/agent/guacamole-localfile.xml` | [11-guacamole.md](setup/11-guacamole.md#115-ship-its-logs-to-wazuh) |
+| OPNsense LAB rules (only if you use NetAlertX ICMP) | pass ICMP from `NETALERTX_IP` to an alias of named devices, above seq 20 | [10-netalertx.md](setup/10-netalertx.md#105-optional-status-for-devices-on-other-segments) |
 | MCP client | server entries pointing at the launchers | [08-ai-ops.md](setup/08-ai-ops.md) |
 
 ### 3.4 Schedules
@@ -218,6 +223,7 @@ Check the interface names before writing `zeek-span`: `ip -br link | grep -E 'ta
 | Zeek Intel refresh | Zeek CT | daily 04:17 (+ up to 15 min) | `zeek/intel/zeek-intel-update.timer` |
 | YARA scan | each Linux host with an agent | daily 03:30 (cron) | `wazuh/yara/deploy_yara.sh` |
 | Span re-apply | Proxmox host | host boot + every firewall-VM start | event-driven, nothing to set |
+| NetAlertX ARP scan / ICMP checks | NetAlertX CT | every 5 min (suggested) | NetAlertX UI: `ARPSCAN_RUN_SCHD`, `ICMP_RUN_SCHD` |
 
 Keep heavy jobs apart: backup, YARA, Intel refresh and Greenbone scans should not overlap.
 
@@ -234,6 +240,8 @@ Keep heavy jobs apart: backup, YARA, Intel refresh and Greenbone scans should no
 | Backup free-space floor | 100 GiB | `/etc/default/homelab-backup` (`ABORT_GIB`) |
 | Watchdog guards | see §3.2 | `/etc/default/opnsense-watchdog` |
 | Proxmox MCP command allow-list | read-mostly | `ai-ops/mcp/proxmox-plus/config.template.json` (`command_policy`) |
+| Guacamole brute-force ban | 5 failures -> 300 s | `/opt/guac/.env` (`BAN_*`); keep above rule 100932's `frequency` |
+| Guacamole failed-login page | 3 in 300 s | `wazuh/rules/zz_audit_tuning.xml` (rule 100932) |
 
 ### 3.6 Content you should edit
 
@@ -243,6 +251,8 @@ Keep heavy jobs apart: backup, YARA, Intel refresh and Greenbone scans should no
 - **Agent policy** (`ai-ops/AGENTS.md`): adjust the approval list to the systems you run.
 - **Scanner exceptions**: if you add another authorized scanner, add its address to
   `suppress_scanner.xml` / `local_rules.xml` beside `SCANNER_IP`.
+- **Periodic monitoring hosts**: add any host that polls on a timer to `SKIP_SRC` in the
+  hunting skill's beacon query (NetAlertX is already there).
 
 ---
 
@@ -256,6 +266,8 @@ Keep heavy jobs apart: backup, YARA, Intel refresh and Greenbone scans should no
 | **Wazuh CT** | `pct enter $WAZUH_CTID` on the host, or `proxmox/scripts/run-on-ct.sh` | rule/decoder install, `wazuh-analysisd -t`, `wazuh/scripts/check-ntfy.sh`, `wazuh/dashboards/*.py` |
 | **Zeek CT** | `pct enter $ZEEK_CTID` | `zeek/intel/install.sh`, `zeek/hunting/*`, `zeekctl` |
 | **Greenbone CT** | `pct enter $GREENBONE_CTID` | `greenbone/vuln_prioritize.py` |
+| **NetAlertX CT** | `pct enter $NETALERTX_CTID` | `docker compose` in `/opt/netalertx` (`lab/netalertx/`) |
+| **Guacamole CT** | `pct enter $GUAC_CTID` | `docker compose` in `/opt/guac` (`lab/guacamole/`), schema generation |
 | **Every Linux host with a Wazuh agent** | SSH / `pct enter` | `wazuh/yara/deploy_yara.sh` |
 
 To get files onto a host or CT: `scp` to the Proxmox host, then `pct push <ctid> <src> <dst>`.
@@ -283,6 +295,8 @@ about, a live system.
 | YARA nightly scan | the script's test-compile prints `COMPILE-OK` | done by the script (cron) | Wazuh daily heartbeat rule fires the next morning |
 | MCP servers (agent access) | launcher starts by hand; a **read-only** call returns live data | add to the MCP client | put `ai-ops/AGENTS.md` where the agent works **before** first use |
 | Scheduled agent runs | everything above, plus the agent policy | your scheduler | keep unattended runs read-only |
+| NetAlertX scheduled scans | UI password changed; `SCAN_SUBNETS` holds LAB only; ICMP devices covered by a LAB pass rule | `ARPSCAN_RUN` / `ICMP_RUN` = `schedule` | 24 h later: zero Wazuh 100840 hits with `srcip` = `NETALERTX_IP` |
+| Guacamole (before saving any connection) | `guacadmin` password changed and TOTP enrolled; agent `<localfile>` added | add connections | 4 bad logins page 100932 ([11.6](setup/11-guacamole.md#116-verify)) |
 
 ---
 

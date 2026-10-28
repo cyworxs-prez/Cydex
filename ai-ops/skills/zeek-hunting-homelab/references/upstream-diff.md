@@ -39,6 +39,8 @@ violates four of its core assumptions, so most of its commands fail here as writ
 - **Multicast/broadcast filter on the beacon detector.** Unfiltered, the top candidates
   were SSDP/broadcast/device-discovery traffic. They beacon perfectly because they are
   timers.
+- **Known-periodic-source skip (`SKIP_SRC`)** for the NetAlertX host, whose status pings
+  would otherwise top the beacon list.
 
 ## Verified
 
