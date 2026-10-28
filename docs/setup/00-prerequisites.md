@@ -21,10 +21,11 @@ One example that meets the table above. Not an endorsement, and not the only opt
 
 | Role | Hardware | Notes |
 |---|---|---|
-| Hypervisor host | AMD mini PC with 2 RJ45 ports ([Amazon](https://www.amazon.com/dp/B0GQTCBV78)) | Proxmox VE 9. NIC0 = WAN, NIC1 = LAN trunk |
+| Hypervisor host | Mini PC, AMD Ryzen 5 3500U (4 cores / 8 threads, Radeon Vega iGPU) ([Amazon](https://www.amazon.com/dp/B0GQTCBV78)) | Proxmox VE 9. Built-in Wi-Fi unused |
+| Network ports | 2x 1 GbE, Realtek RTL8111 | NIC0 = WAN, NIC1 = LAN trunk. Guests (including OPNsense) see virtio NICs, so the Realtek chip only matters to the Linux host |
 | RAM | 16 GB stock + 8 GB added, DDR4 SO-DIMM (24 GB) | Before the upgrade Proxmox saw only 12.6 GB (iGPU reservation, below); after, ~23 GB |
-| Boot / guest storage | 512 GB NVMe (PCIe 3.0), stock | Holds Proxmox and all guests |
-| Backup drive | 1 TB HDD over USB ([enclosure](https://a.co/d/07dxemXj)) | LUKS-encrypted; weekly vzdump target ([06](06-resilience.md#64-weekly-encrypted-backup)) |
+| Boot / guest storage | 512 GB NVMe (PCIe 3.0, DRAM-less), stock | Holds Proxmox and all guests. DRAM-less drives slow down under sustained writes - fine here, but keep backups off it |
+| Backup drive | 1 TB 2.5" HDD (Seagate ST1000LM035) over USB ([enclosure](https://a.co/d/07dxemXj)) | LUKS-encrypted; weekly vzdump target ([06](06-resilience.md#64-weekly-encrypted-backup)) |
 | Switch | Ubiquiti UniFi USW Lite 8 PoE | Port 1 = trunk to the host; PoE powers the APs |
 | Access points | 2x Ubiquiti UniFi U7 Lite | One SSID per VLAN |
 | Router / firewall | OPNsense VM on the host | No hardware gateway |
