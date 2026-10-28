@@ -26,6 +26,35 @@ Put it at the root of whatever directory the agent works from. It sets:
 | `proxmox-plus` | `proxmox-mcp-plus` (PyPI) | VM/CT lifecycle, guest command execution (allow-listed), job queue | `ai-ops/mcp/proxmox-plus/install.sh` |
 | `proxmox-api` | `ry-ops/proxmox-mcp-server` | Full PVE API incl. **`get_node_rrddata`** (historical CPU/memory - use it instead of point-in-time samples) | Clone upstream; launch under `op run` |
 | `wazuh` | `gbrigandi/mcp-server-wazuh` | Agents, rules, alerts, manager logs | `ai-ops/mcp/wazuh/setup-wazuh-mcp.sh` (macOS arm64 + 1Password), or download the release binary for your platform into `ai-ops/mcp/wazuh/mcp-server-wazuh` and fill `config/wazuh.env` by hand |
+| `unifi` *(optional - UniFi gear only)* | `unifi-mcp-server` 0.2.5 (PyPI, [enuno/unifi-mcp-server](https://github.com/enuno/unifi-mcp-server)) | Switch/AP/gateway inventory, clients, WLANs, port profiles, traffic flows | [8.2.1](#821-unifi-optional) |
+
+### 8.2.1 UniFi (optional)
+
+Skip this unless your switch, APs or gateway are UniFi. Other vendors:
+[00-prerequisites.md](00-prerequisites.md#switch--ap-controller-mcp-servers).
+
+| Step | Where | Do |
+|---|---|---|
+| 1. Install | workstation | `pipx install unifi-mcp-server==0.2.5` (pin it; upgrade deliberately) |
+| 2. API key | UniFi Network app: **Settings -> Control Plane -> Integrations -> Create API key** | The key carries the rights of the admin who creates it. If your console offers a view-only admin role, create the key under that admin |
+| 3. Store it | 1Password item `unifi-api`, field `credential` | or a plain value in the env file, `chmod 600` |
+| 4. Configure | `cp config/unifi.env.example config/unifi.env` | `UNIFI_LOCAL_HOST` = the gateway/console address, **or** the host running UniFi OS Server if you have switches/APs only |
+| 5. Reach it | OPNsense | The workstation must reach that address on 443. With the reference ladders, TRUSTED -> MGMT admin access covers it |
+| 6. Client | MCP client config | `"unifi": { "command": "/path/to/cydex/ai-ops/mcp/unifi/run-unifi-mcp.sh" }` |
+| 7. Prove read-only access | MCP client | call a list tool (devices, networks) and compare with the controller UI |
+
+Safety notes:
+
+- **Local API, not cloud.** `UNIFI_API_TYPE=local` gives the full tool set; the cloud
+  API modes are limited and route through Ubiquiti's cloud.
+- **Writes need explicit confirmation.** Mutating tools refuse to run without
+  `confirm=True` and support `dry_run=True`. `AGENTS.md` still applies: no controller
+  change without operator approval. Don't add those tools to an unattended run.
+- **Analytics stay off.** The server can send tool inputs and outputs to a third-party
+  analytics service (agnost.ai) when `AGNOST_ENABLED=true`. The launcher forces it off;
+  don't turn it on.
+- **Audit log.** `UNIFI_AUDIT_LOG_ENABLED=true` records mutating calls in
+  `ai-ops/mcp/unifi/audit.log` (git-ignored).
 
 Both launchers read their credentials from `config/opnsense.env` / `config/wazuh.env`
 (see [configure.md §3.1](../configure.md#31-credentials-on-the-workstation)):

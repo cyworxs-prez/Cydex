@@ -160,6 +160,7 @@ Never in the repo. Each `config/*.env` accepts either `op://` references (resolv
 | File | Holds | Used by | How to create |
 |---|---|---|---|
 | `config/opnsense.env` | `OPNSENSE_URL`, `OPNSENSE_API_KEY`, `OPNSENSE_API_SECRET` | `opnsense/scripts/*`, `opnsense/monit/*`, OPNsense MCP | `cp config/opnsense.env.example config/opnsense.env`; API key from OPNsense (System > Access > Users) |
+| `config/unifi.env` *(optional, UniFi gear only)* | `UNIFI_LOCAL_HOST`, `UNIFI_API_KEY` | UniFi MCP | `cp config/unifi.env.example config/unifi.env`; key from the UniFi Network app ([08-ai-ops.md](setup/08-ai-ops.md#821-unifi-optional)) |
 | `config/wazuh.env` | Wazuh API + indexer users/passwords | Wazuh MCP | `ai-ops/mcp/wazuh/setup-wazuh-mcp.sh` writes it (1Password + macOS), or copy the example and fill it in |
 | `~/.proxmoxmcp/config.json` | Proxmox API token, SSH key path | Proxmox MCP | `ai-ops/mcp/proxmox-plus/install.sh` (1Password), or fill `config.template.json` by hand |
 | `/opt/guac/.env` **on the Guacamole CT** | Postgres password, TOTP and ban settings | Guacamole compose | `cp .env.example .env`, `chmod 600`, generate the password ([11-guacamole.md](setup/11-guacamole.md#112-install)) |
@@ -173,6 +174,7 @@ references in the files above):
 | `proxmox-api-token` | `token name`, `credential` |
 | `proxmox-mcp-ssh-key` | `private key` |
 | `wazuh-mcp` | `api_password`, `indexer_password` (created by the setup script) |
+| `unifi-api` *(optional)* | `credential` (UniFi Network API key) |
 
 The vault name is written into `config/opnsense.env.example` and
 `ai-ops/mcp/proxmox-plus/{config.template.json,install.sh}` - change it there too if
