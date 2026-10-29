@@ -89,4 +89,11 @@
     <group>firewall_block,intra_segment,</group>
   </rule>
 
+  <rule id="100849" level="2">
+    <if_sid>100841,100842</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Authorized scanner $(srcip) blocked reaching $(dstip) (expected during scans, not paged)</description>
+    <group>firewall_block,internal_block,scanner_allowlist,</group>
+  </rule>
+
 </group>

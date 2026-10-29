@@ -1,0 +1,32 @@
+# Replays sample events through a real Wazuh engine and checks each one hits the
+# expected rule. Runs when rules, decoders or tests change. Details: tests/wazuh/run.sh
+name: rule-tests
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ["wazuh/rules/**", "wazuh/decoders/**", "tests/wazuh/**", ".github/workflows/rule-tests.yml"]
+  push:
+    branches: [main]
+    paths: ["wazuh/rules/**", "wazuh/decoders/**", "tests/wazuh/**", ".github/workflows/rule-tests.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rule-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  logtest:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run rule tests
+        run: tests/wazuh/run.sh
