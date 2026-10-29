@@ -1,55 +1,55 @@
 [
  {
   "name": "watchdog heartbeat is silent",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: heartbeat: VM100 healthy (agent=1 icmp=1 dns=1), watchdog operating normally",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: heartbeat: VM200 healthy (agent=1 icmp=1 dns=1), watchdog operating normally",
   "rule": "100862",
   "level": 0
  },
  {
   "name": "watchdog standing down",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM100 is locked ('backup' - backup/snapshot/migrate) - standing down",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM200 is locked ('backup' - backup/snapshot/migrate) - standing down",
   "rule": "100863",
   "level": 3
  },
  {
   "name": "watchdog VM recovered on its own",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM100 recovered on its own (agent=1 icmp=1 dns=1) after 1 failed probe(s)",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM200 recovered on its own (agent=1 icmp=1 dns=1) after 1 failed probe(s)",
   "rule": "100864",
   "level": 5
  },
  {
   "name": "watchdog all probes failed",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM100 ALL probes failed (agent=0 icmp=0 dns=0) - consecutive=1/3",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM200 ALL probes failed (agent=0 icmp=0 dns=0) - consecutive=1/3",
   "rule": "100865",
   "level": 7
  },
  {
   "name": "watchdog down within cooldown",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM100 still down but within cooldown (120s < 1800s) - NOT acting",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM200 still down but within cooldown (120s < 1800s) - NOT acting",
   "rule": "100866",
   "level": 10
  },
  {
   "name": "watchdog recovering",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM100 unresponsive for 3 consecutive probes - RECOVERING",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM200 unresponsive for 3 consecutive probes - RECOVERING",
   "rule": "100867",
   "level": 10
  },
  {
   "name": "watchdog start failed",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM100 START FAILED",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM200 START FAILED",
   "rule": "100868",
   "level": 12
  },
  {
   "name": "watchdog VM did not come back",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM100 did NOT come back within 240s of recovery - manual intervention required",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM200 did NOT come back within 240s of recovery - manual intervention required",
   "rule": "100869",
   "level": 12
  },
  {
   "name": "watchdog refuses (daily cap)",
-  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM100 down but already recovered 3 times today (cap 3) - REFUSING to act, needs a human",
+  "log": "Oct 29 08:00:00 pve opnsense-watchdog[4242]: VM200 down but already recovered 3 times today (cap 3) - REFUSING to act, needs a human",
   "rule": "100870",
   "level": 12
  },
@@ -67,13 +67,13 @@
  },
  {
   "name": "span re-applied",
-  "log": "Oct 29 08:00:00 pve zeek-span[4242]: span re-applied: vmbr0 ingress+egress -> veth106i1",
+  "log": "Oct 29 08:00:00 pve zeek-span[4242]: span re-applied: tap200i1 ingress+egress -> veth206i1",
   "rule": "100891",
   "level": 3
  },
  {
   "name": "span not applied pages",
-  "log": "Oct 29 08:00:00 pve zeek-span[4242]: span NOT applied: veth106i1 absent (is the Zeek CT running?) - Zeek is blind",
+  "log": "Oct 29 08:00:00 pve zeek-span[4242]: span NOT applied: veth206i1 absent (is the Zeek CT running?) - Zeek is blind",
   "rule": "100892",
   "level": 12
  },
