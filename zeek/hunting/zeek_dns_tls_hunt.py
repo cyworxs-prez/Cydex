@@ -15,7 +15,7 @@ def load(n):
             line=line.strip()
             if line.startswith("{"):
                 try: r.append(json.loads(line))
-                except: pass
+                except ValueError: pass
     return r
 
 dns=load("dns"); ssl=load("ssl"); conn=load("conn")
@@ -59,7 +59,7 @@ if HOST:
 print("\n=== LONGEST-LIVED EXTERNAL CONNECTIONS ===")
 def priv(ip):
     try: return ipaddress.ip_address(ip).is_private or ipaddress.ip_address(ip).is_multicast or ipaddress.ip_address(ip).is_link_local
-    except: return True
+    except (ValueError, TypeError): return True
 longs=[c for c in conn if c.get("duration") and not priv(c.get("id.resp_h",""))]
 for c in sorted(longs, key=lambda x: -x["duration"])[:8]:
     print(f"  {c['duration']:>8.0f}s  {c.get('id.orig_h')} -> {c.get('id.resp_h')}:{c.get('id.resp_p')} "

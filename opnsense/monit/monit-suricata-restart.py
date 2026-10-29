@@ -4,12 +4,12 @@ OPNsense rejects spaces in test.path, so exec-with-args is impossible.
 Instead: define Suricata as a monit PROCESS service with start/stop programs,
 and use monit's own RESTART action on a process-memory test. This targets the
 actual failure mode (Suricata runaway) instead of a whole-system proxy metric."""
-import json,os,base64,ssl,urllib.request,sys
+import sys
 
 import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'scripts'))
-from opn_api import call as _api_call, sel  # credentials: see config/opnsense.env.example
+from opn_api import call as _api_call  # credentials: see config/opnsense.env.example
 def call(path, body=None, t=90):
     try: return _api_call(path, body, timeout=t)
     except Exception as ex: return {'ERR': str(ex)[:150]}
@@ -82,7 +82,7 @@ print("  pidfile=%s" % s2.get('pidfile'))
 print("  start  =%s" % s2.get('start'))
 print("  stop   =%s" % s2.get('stop'))
 att={u for u,v in s2['tests'].items() if isinstance(v,dict) and v.get('selected')}
-for name,typ,cond,action,path in TESTS:
+for name,_typ,_cond,_action,_path in TESTS:
     u=uuids[name]; t=m2['test'].get(u)
     print("  test %-20s attached=%-5s action=%-8s cond=%s" %
           (name, u in att, sel(t.get('action')), t.get('condition')))

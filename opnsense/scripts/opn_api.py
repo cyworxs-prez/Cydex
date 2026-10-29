@@ -16,7 +16,7 @@ Usage:
     data = call('/api/ids/settings/get')
     data = call('/api/ids/settings/set', {'ids': {...}})
 """
-import base64, json, os, shutil, ssl, subprocess, sys, time, urllib.request
+import base64, json, os, shutil, ssl, subprocess, time, urllib.request
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _OP = shutil.which('op') or '/opt/homebrew/bin/op'

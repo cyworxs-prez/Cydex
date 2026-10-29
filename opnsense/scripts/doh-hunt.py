@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """DoH exposure hunt for the IOT VLAN, using the data sources that still work
 (Zeek is currently dark - the tc mirror did not survive the reboot)."""
-import json,os,base64,ssl,urllib.request,socket,re
+import socket,re
 from collections import Counter
 import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'scripts'))
-from opn_api import call as _api_call, sel  # credentials: see config/opnsense.env.example
+from opn_api import call as _api_call  # credentials: see config/opnsense.env.example
 def call(path, body=None, t=90):
     try: return _api_call(path, body, timeout=t)
     except Exception as ex: return {'ERR': str(ex)[:150]}

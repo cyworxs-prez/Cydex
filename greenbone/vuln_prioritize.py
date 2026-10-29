@@ -21,7 +21,7 @@ Auth:
   GMP password read from $GB_PW, else /root/.gbpw (chmod 600), else abort.
   (No password is hard-coded in this file.)
 """
-import os, sys, csv, ssl, gzip, json, io, subprocess, urllib.request, xml.etree.ElementTree as ET
+import os, sys, csv, ssl, gzip, json, subprocess, urllib.request, xml.etree.ElementTree as ET
 from collections import defaultdict
 
 GVMD_VOL = "greenbone-community-edition_gvmd_socket_vol"

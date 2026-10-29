@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Read-only Zeek hunt: beaconing, rare destinations, DNS anomalies, TLS posture."""
-import json, glob, math, collections, ipaddress, os
+import json, math, collections, ipaddress, os
 
 def load(name, cap=200000):
     rows=[]
@@ -11,13 +11,13 @@ def load(name, cap=200000):
                 line=line.strip()
                 if not line.startswith("{"): continue
                 try: rows.append(json.loads(line))
-                except: pass
+                except ValueError: pass
                 if len(rows)>=cap: break
     return rows
 
 def priv(ip):
     try: return ipaddress.ip_address(ip).is_private or ipaddress.ip_address(ip).is_link_local or ipaddress.ip_address(ip).is_multicast
-    except: return True
+    except (ValueError, TypeError): return True
 
 conn=load("conn"); dns=load("dns"); ssl=load("ssl"); http=load("http")
 print(f"records: conn={len(conn)} dns={len(dns)} ssl={len(ssl)} http={len(http)}")
@@ -115,7 +115,7 @@ for c in conn:
     if not s or not d or not priv(s) or not priv(d): continue
     try:
         if ipaddress.ip_address(s).version!=4 or ipaddress.ip_address(d).version!=4: continue
-    except: continue
+    except (ValueError, TypeError): continue
     a=".".join(s.split(".")[:3]); b=".".join(d.split(".")[:3])
     if a!=b and not d.endswith(".255"):
         xs[(a,b,c.get("id.resp_p"))]+=1
