@@ -121,7 +121,7 @@
  },
  {
   "name": "yara scan ok",
-  "log": "{\"yara_status\": \"ok\", \"yara_host\": \"soc\"}",
+  "log": "{\"yara_status\":\"ok\",\"yara_host\":\"soc\"}",
   "rule": "100823",
   "level": 3,
   "format": "json",
@@ -129,7 +129,7 @@
  },
  {
   "name": "yara no rules loaded",
-  "log": "{\"yara_status\": \"no_rules\", \"yara_host\": \"soc\"}",
+  "log": "{\"yara_status\":\"no_rules\",\"yara_host\":\"soc\"}",
   "rule": "100824",
   "level": 7,
   "format": "json",
@@ -137,7 +137,7 @@
  },
  {
   "name": "yara match pages",
-  "log": "{\"yara_rule\": \"MAL_Example_Loader\", \"yara_file\": \"/tmp/x.bin\", \"yara_host\": \"soc\", \"yara_scan_ts\": \"2026-10-29T08:00:00Z\"}",
+  "log": "{\"yara_rule\":\"MAL_Example_Loader\",\"yara_file\":\"/tmp/x.bin\",\"yara_host\":\"soc\",\"yara_scan_ts\":\"2026-10-29T08:00:00Z\"}",
   "rule": "100821",
   "level": 12,
   "format": "json",
@@ -145,7 +145,7 @@
  },
  {
   "name": "yara EICAR test match is low",
-  "log": "{\"yara_rule\": \"SUSP_Eicar_Test_File\", \"yara_file\": \"/tmp/eicar.com\", \"yara_host\": \"soc\", \"yara_scan_ts\": \"2026-10-29T08:00:00Z\"}",
+  "log": "{\"yara_rule\":\"SUSP_Eicar_Test_File\",\"yara_file\":\"/tmp/eicar.com\",\"yara_host\":\"soc\",\"yara_scan_ts\":\"2026-10-29T08:00:00Z\"}",
   "rule": "100822",
   "level": 5,
   "format": "json",
@@ -213,8 +213,8 @@
   "level": 0
  },
  {
-  "name": "udp cross-segment is silent",
-  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,17,udp,60,10.10.120.5,10.10.110.20,51515,5353,40",
+  "name": "udp to ephemeral port is silent",
+  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,17,udp,60,10.10.120.5,10.10.110.20,51515,50123,40",
   "rule": "100850",
   "level": 0
  },
@@ -232,10 +232,22 @@
   "repeat": 12
  },
  {
-  "name": "scanner block is low",
-  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,6,tcp,60,10.10.140.12,10.10.110.20,51515,22,0,S,1000,,64240,,mss",
+  "name": "scanner block to internet is low",
+  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,6,tcp,60,10.10.140.12,203.0.113.10,51515,22,0,S,1000,,64240,,mss",
   "rule": "100022",
   "level": 2
+ },
+ {
+  "name": "tcp cross-segment to ephemeral port still alerts",
+  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,6,tcp,60,10.10.120.5,10.10.110.20,51515,22,0,S,1000,,64240,,mss",
+  "rule": "100841",
+  "level": 6
+ },
+ {
+  "name": "udp cross-segment to service port still alerts",
+  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,17,udp,60,10.10.120.5,10.10.110.20,51515,53,40",
+  "rule": "100841",
+  "level": 6
  },
  {
   "name": "suricata priority 2",
@@ -257,49 +269,49 @@
  },
  {
   "name": "suricata eve severity 1 pages",
-  "log": "{\"timestamp\": \"2026-10-29T08:00:00.000000+0000\", \"flow_id\": 1, \"in_iface\": \"vtnet0\", \"event_type\": \"alert\", \"src_ip\": \"198.51.100.7\", \"src_port\": 40000, \"dest_ip\": \"10.10.110.20\", \"dest_port\": 445, \"proto\": \"TCP\", \"alert\": {\"action\": \"allowed\", \"gid\": 1, \"signature_id\": 2000001, \"rev\": 1, \"signature\": \"ET EXAMPLE Test\", \"category\": \"Attempted Administrator Privilege Gain\", \"severity\": 1}}",
+  "log": "{\"timestamp\":\"2026-10-29T08:00:00.000000+0000\",\"flow_id\":1,\"in_iface\":\"vtnet0\",\"event_type\":\"alert\",\"src_ip\":\"198.51.100.7\",\"src_port\":40000,\"dest_ip\":\"10.10.110.20\",\"dest_port\":445,\"proto\":\"TCP\",\"alert\":{\"action\":\"allowed\",\"gid\":1,\"signature_id\":2000001,\"rev\":1,\"signature\":\"ET EXAMPLE Test\",\"category\":\"Attempted Administrator Privilege Gain\",\"severity\":1}}",
   "rule": "100205",
   "level": 12,
   "format": "json"
  },
  {
   "name": "suricata eve from scanner is silent",
-  "log": "{\"timestamp\": \"2026-10-29T08:00:00.000000+0000\", \"flow_id\": 1, \"in_iface\": \"vtnet0\", \"event_type\": \"alert\", \"src_ip\": \"10.10.140.12\", \"src_port\": 40000, \"dest_ip\": \"10.10.110.20\", \"dest_port\": 445, \"proto\": \"TCP\", \"alert\": {\"action\": \"allowed\", \"gid\": 1, \"signature_id\": 2000001, \"rev\": 1, \"signature\": \"ET EXAMPLE Test\", \"category\": \"Attempted Administrator Privilege Gain\", \"severity\": 1}}",
+  "log": "{\"timestamp\":\"2026-10-29T08:00:00.000000+0000\",\"flow_id\":1,\"in_iface\":\"vtnet0\",\"event_type\":\"alert\",\"src_ip\":\"10.10.140.12\",\"src_port\":40000,\"dest_ip\":\"10.10.110.20\",\"dest_port\":445,\"proto\":\"TCP\",\"alert\":{\"action\":\"allowed\",\"gid\":1,\"signature_id\":2000001,\"rev\":1,\"signature\":\"ET EXAMPLE Test\",\"category\":\"Attempted Administrator Privilege Gain\",\"severity\":1}}",
   "rule": "100206",
   "level": 0,
   "format": "json"
  },
  {
   "name": "suricata eve from vuln scanner is silent",
-  "log": "{\"timestamp\": \"2026-10-29T08:00:00.000000+0000\", \"flow_id\": 1, \"in_iface\": \"vtnet0\", \"event_type\": \"alert\", \"src_ip\": \"10.10.140.24\", \"src_port\": 40000, \"dest_ip\": \"10.10.110.20\", \"dest_port\": 445, \"proto\": \"TCP\", \"alert\": {\"action\": \"allowed\", \"gid\": 1, \"signature_id\": 2000001, \"rev\": 1, \"signature\": \"ET EXAMPLE Test\", \"category\": \"Attempted Administrator Privilege Gain\", \"severity\": 1}}",
+  "log": "{\"timestamp\":\"2026-10-29T08:00:00.000000+0000\",\"flow_id\":1,\"in_iface\":\"vtnet0\",\"event_type\":\"alert\",\"src_ip\":\"10.10.140.24\",\"src_port\":40000,\"dest_ip\":\"10.10.110.20\",\"dest_port\":445,\"proto\":\"TCP\",\"alert\":{\"action\":\"allowed\",\"gid\":1,\"signature_id\":2000001,\"rev\":1,\"signature\":\"ET EXAMPLE Test\",\"category\":\"Attempted Administrator Privilege Gain\",\"severity\":1}}",
   "rule": "100207",
   "level": 0,
   "format": "json"
  },
  {
   "name": "zeek notice generic",
-  "log": "{\"ts\": 1761724800.0, \"note\": \"SSL::Invalid_Server_Cert\", \"msg\": \"example\", \"src\": \"10.10.120.5\", \"actions\": [\"Notice::ACTION_LOG\"]}",
+  "log": "{\"ts\":1761724800.0,\"note\":\"SSL::Invalid_Server_Cert\",\"msg\":\"example\",\"src\":\"10.10.120.5\",\"actions\":[\"Notice::ACTION_LOG\"]}",
   "rule": "100710",
   "level": 6,
   "format": "json"
  },
  {
   "name": "zeek notice scan",
-  "log": "{\"ts\": 1761724800.0, \"note\": \"Scan::Port_Scan\", \"msg\": \"example\", \"src\": \"10.10.120.5\", \"actions\": [\"Notice::ACTION_LOG\"]}",
+  "log": "{\"ts\":1761724800.0,\"note\":\"Scan::Port_Scan\",\"msg\":\"example\",\"src\":\"10.10.120.5\",\"actions\":[\"Notice::ACTION_LOG\"]}",
   "rule": "100711",
   "level": 9,
   "format": "json"
  },
  {
   "name": "zeek notice capture loss",
-  "log": "{\"ts\": 1761724800.0, \"note\": \"CaptureLoss::Too_Much_Loss\", \"msg\": \"example\", \"src\": \"10.10.120.5\", \"actions\": [\"Notice::ACTION_LOG\"]}",
+  "log": "{\"ts\":1761724800.0,\"note\":\"CaptureLoss::Too_Much_Loss\",\"msg\":\"example\",\"src\":\"10.10.120.5\",\"actions\":[\"Notice::ACTION_LOG\"]}",
   "rule": "100712",
   "level": 6,
   "format": "json"
  },
  {
   "name": "zeek capture loss repeated pages",
-  "log": "{\"ts\": 1761724800.0, \"note\": \"CaptureLoss::Too_Much_Loss\", \"msg\": \"example\", \"src\": \"10.10.120.5\", \"actions\": [\"Notice::ACTION_LOG\"]}",
+  "log": "{\"ts\":1761724800.0,\"note\":\"CaptureLoss::Too_Much_Loss\",\"msg\":\"example\",\"src\":\"10.10.120.5\",\"actions\":[\"Notice::ACTION_LOG\"]}",
   "rule": "100713",
   "level": 12,
   "format": "json",
@@ -307,49 +319,49 @@
  },
  {
   "name": "zeek TLS bad cert to internet",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.orig_p\": 50000, \"id.resp_h\": \"203.0.113.10\", \"id.resp_p\": 443, \"version\": \"TLSv12\", \"server_name\": \"svc.example\", \"validation_status\": \"self signed certificate\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.orig_p\":50000,\"id.resp_h\":\"203.0.113.10\",\"id.resp_p\":443,\"version\":\"TLSv12\",\"server_name\":\"svc.example\",\"validation_status\":\"self signed certificate\"}",
   "rule": "100715",
   "level": 6,
   "format": "json"
  },
  {
   "name": "zeek TLS bad cert internal is silent",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.orig_p\": 50000, \"id.resp_h\": \"10.10.130.2\", \"id.resp_p\": 443, \"version\": \"TLSv12\", \"server_name\": \"svc.example\", \"validation_status\": \"self signed certificate\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.orig_p\":50000,\"id.resp_h\":\"10.10.130.2\",\"id.resp_p\":443,\"version\":\"TLSv12\",\"server_name\":\"svc.example\",\"validation_status\":\"self signed certificate\"}",
   "rule": "100718",
   "level": 0,
   "format": "json"
  },
  {
   "name": "zeek DTLS bad cert is silent",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.orig_p\": 50000, \"id.resp_h\": \"203.0.113.10\", \"id.resp_p\": 443, \"version\": \"DTLSv12\", \"server_name\": \"svc.example\", \"validation_status\": \"self signed certificate\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.orig_p\":50000,\"id.resp_h\":\"203.0.113.10\",\"id.resp_p\":443,\"version\":\"DTLSv12\",\"server_name\":\"svc.example\",\"validation_status\":\"self signed certificate\"}",
   "rule": "100719",
   "level": 0,
   "format": "json"
  },
  {
   "name": "zeek weird",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"name\": \"bad_TCP_checksum\", \"notice\": false, \"peer\": \"zeek\", \"source\": \"TCP\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"name\":\"unknown_protocol\",\"notice\":false,\"peer\":\"zeek\",\"source\":\"TCP\"}",
   "rule": "100716",
   "level": 3,
   "format": "json"
  },
  {
   "name": "zeek benign weird is silent",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"name\": \"truncated_tcp_payload\", \"notice\": false, \"peer\": \"zeek\", \"source\": \"TCP\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"name\":\"truncated_tcp_payload\",\"notice\":false,\"peer\":\"zeek\",\"source\":\"TCP\"}",
   "rule": "100717",
   "level": 0,
   "format": "json"
  },
  {
   "name": "zeek sees no traffic",
-  "log": "{\"ts\": 1761724800.0, \"ts_delta\": 900.0, \"peer\": \"zeek\", \"gaps\": 0, \"acks\": 0, \"percent_lost\": 0.0}",
+  "log": "{\"ts\":1761724800.0,\"ts_delta\":900.0,\"peer\":\"zeek\",\"gaps\":0,\"acks\":0,\"percent_lost\":0.0}",
   "rule": "100731",
   "level": 5,
   "format": "json"
  },
  {
   "name": "zeek blind repeated pages",
-  "log": "{\"ts\": 1761724800.0, \"ts_delta\": 900.0, \"peer\": \"zeek\", \"gaps\": 0, \"acks\": 0, \"percent_lost\": 0.0}",
+  "log": "{\"ts\":1761724800.0,\"ts_delta\":900.0,\"peer\":\"zeek\",\"gaps\":0,\"acks\":0,\"percent_lost\":0.0}",
   "rule": "100735",
   "level": 12,
   "format": "json",
@@ -357,56 +369,70 @@
  },
  {
   "name": "zeek heavy capture loss",
-  "log": "{\"ts\": 1761724800.0, \"ts_delta\": 900.0, \"peer\": \"zeek\", \"gaps\": 0, \"acks\": 5000, \"percent_lost\": 25.5}",
+  "log": "{\"ts\":1761724800.0,\"ts_delta\":900.0,\"peer\":\"zeek\",\"gaps\":0,\"acks\":5000,\"percent_lost\":25.5}",
   "rule": "100732",
   "level": 7,
   "format": "json"
  },
  {
+  "name": "zeek total capture loss",
+  "log": "{\"ts\":1761724800.0,\"ts_delta\":900.0,\"peer\":\"zeek\",\"gaps\":0,\"acks\":5000,\"percent_lost\":100.0}",
+  "rule": "100732",
+  "level": 7,
+  "format": "json"
+ },
+ {
+  "name": "zeek minor capture loss is silent",
+  "log": "{\"ts\":1761724800.0,\"ts_delta\":900.0,\"peer\":\"zeek\",\"gaps\":0,\"acks\":5000,\"percent_lost\":2.5}",
+  "rule": "100730",
+  "level": 0,
+  "format": "json"
+ },
+ {
   "name": "intel hit generic",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"seen.indicator\": \"bad.example\", \"seen.indicator_type\": \"Intel::DOMAIN\", \"seen.where\": \"DNS::IN_REQUEST\", \"matched\": [\"Intel::DOMAIN\"], \"sources\": [\"other-feed\"]}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"seen.indicator\":\"bad.example\",\"seen.indicator_type\":\"Intel::DOMAIN\",\"seen.where\":\"DNS::IN_REQUEST\",\"matched\":[\"Intel::DOMAIN\"],\"sources\":[\"other-feed\"]}",
   "rule": "100901",
   "level": 10,
   "format": "json"
  },
  {
   "name": "intel hit local IOC",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"seen.indicator\": \"bad.example\", \"seen.indicator_type\": \"Intel::DOMAIN\", \"seen.where\": \"DNS::IN_REQUEST\", \"matched\": [\"Intel::DOMAIN\"], \"sources\": [\"local\"]}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"seen.indicator\":\"bad.example\",\"seen.indicator_type\":\"Intel::DOMAIN\",\"seen.where\":\"DNS::IN_REQUEST\",\"matched\":[\"Intel::DOMAIN\"],\"sources\":[\"local\"]}",
   "rule": "100902",
   "level": 14,
   "format": "json"
  },
  {
   "name": "intel hit feodo",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"seen.indicator\": \"bad.example\", \"seen.indicator_type\": \"Intel::DOMAIN\", \"seen.where\": \"DNS::IN_REQUEST\", \"matched\": [\"Intel::DOMAIN\"], \"sources\": [\"feodo\"]}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"seen.indicator\":\"bad.example\",\"seen.indicator_type\":\"Intel::DOMAIN\",\"seen.where\":\"DNS::IN_REQUEST\",\"matched\":[\"Intel::DOMAIN\"],\"sources\":[\"feodo\"]}",
   "rule": "100903",
   "level": 12,
   "format": "json"
  },
  {
   "name": "intel hit threatfox",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"seen.indicator\": \"bad.example\", \"seen.indicator_type\": \"Intel::DOMAIN\", \"seen.where\": \"DNS::IN_REQUEST\", \"matched\": [\"Intel::DOMAIN\"], \"sources\": [\"threatfox\"]}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"seen.indicator\":\"bad.example\",\"seen.indicator_type\":\"Intel::DOMAIN\",\"seen.where\":\"DNS::IN_REQUEST\",\"matched\":[\"Intel::DOMAIN\"],\"sources\":[\"threatfox\"]}",
   "rule": "100903",
   "level": 12,
   "format": "json"
  },
  {
   "name": "intel hit tor exit",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"seen.indicator\": \"bad.example\", \"seen.indicator_type\": \"Intel::DOMAIN\", \"seen.where\": \"DNS::IN_REQUEST\", \"matched\": [\"Intel::DOMAIN\"], \"sources\": [\"tor-exit\"]}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"seen.indicator\":\"bad.example\",\"seen.indicator_type\":\"Intel::DOMAIN\",\"seen.where\":\"DNS::IN_REQUEST\",\"matched\":[\"Intel::DOMAIN\"],\"sources\":[\"tor-exit\"]}",
   "rule": "100904",
   "level": 5,
   "format": "json"
  },
  {
   "name": "intel hit urlhaus domain",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"seen.indicator\": \"bad.example\", \"seen.indicator_type\": \"Intel::DOMAIN\", \"seen.where\": \"DNS::IN_REQUEST\", \"matched\": [\"Intel::DOMAIN\"], \"sources\": [\"urlhaus-domain\"]}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"seen.indicator\":\"bad.example\",\"seen.indicator_type\":\"Intel::DOMAIN\",\"seen.where\":\"DNS::IN_REQUEST\",\"matched\":[\"Intel::DOMAIN\"],\"sources\":[\"urlhaus-domain\"]}",
   "rule": "100905",
   "level": 8,
   "format": "json"
  },
  {
   "name": "sigma DNS cobalt-style UWhRCA",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"10.10.130.1\", \"query\": \"UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA.example\", \"answers\": [\"203.0.113.10\"], \"rejected\": false}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"10.10.130.1\",\"query\":\"UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA.example\",\"answers\":[\"203.0.113.10\"],\"rejected\":false}",
   "rule": "100802",
   "level": 10,
   "format": "json",
@@ -414,23 +440,15 @@
  },
  {
   "name": "sigma DNS crypto-mining pool",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"10.10.130.1\", \"query\": \"pool.monerohash.com\", \"answers\": [\"203.0.113.10\"], \"rejected\": false}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"10.10.130.1\",\"query\":\"pool.monerohash.com\",\"answers\":[\"203.0.113.10\"],\"rejected\":false}",
   "rule": "100803",
   "level": 5,
   "format": "json",
   "location": "/opt/zeek/logs/current/dns.log"
  },
  {
-  "name": "sigma DNS mining pool sinkholed is silent",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"10.10.130.1\", \"query\": \"pool.monerohash.com\", \"answers\": [\"0.0.0.0\"], \"rejected\": false}",
-  "rule": "100800",
-  "level": 0,
-  "format": "json",
-  "location": "/opt/zeek/logs/current/dns.log"
- },
- {
   "name": "sigma DNS nkn seed",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"10.10.130.1\", \"query\": \"seed.nkn.org\", \"answers\": [\"203.0.113.10\"], \"rejected\": false}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"10.10.130.1\",\"query\":\"seed.nkn.org\",\"answers\":[\"203.0.113.10\"],\"rejected\":false}",
   "rule": "100804",
   "level": 5,
   "format": "json",
@@ -438,7 +456,7 @@
  },
  {
   "name": "sigma DNS tor proxy domain",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"10.10.130.1\", \"query\": \"abc.onion.ca\", \"answers\": [\"203.0.113.10\"], \"rejected\": false}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"10.10.130.1\",\"query\":\"abc.onion.ca\",\"answers\":[\"203.0.113.10\"],\"rejected\":false}",
   "rule": "100805",
   "level": 7,
   "format": "json",
@@ -446,7 +464,7 @@
  },
  {
   "name": "sigma HTTP WebDAV UA fetching PE",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"method\": \"GET\", \"host\": \"files.example\", \"uri\": \"/share/doc\", \"user_agent\": \"Microsoft-WebDAV-MiniRedir/10.0\", \"resp_mime_types\": [\"application/x-dosexec\"]}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"method\":\"GET\",\"host\":\"files.example\",\"uri\":\"/share/doc\",\"user_agent\":\"Microsoft-WebDAV-MiniRedir/10.0\",\"resp_mime_types\":[\"application/x-dosexec\"]}",
   "rule": "100806",
   "level": 7,
   "format": "json",
@@ -454,7 +472,7 @@
  },
  {
   "name": "sigma HTTP WebDAV UA fetching .exe",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"method\": \"GET\", \"host\": \"files.example\", \"uri\": \"/share/tool.exe\", \"user_agent\": \"Microsoft-WebDAV-MiniRedir/10.0\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"method\":\"GET\",\"host\":\"files.example\",\"uri\":\"/share/tool.exe\",\"user_agent\":\"Microsoft-WebDAV-MiniRedir/10.0\"}",
   "rule": "100807",
   "level": 7,
   "format": "json",
@@ -462,7 +480,7 @@
  },
  {
   "name": "sigma HTTP webdav path fetching .exe",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"method\": \"GET\", \"host\": \"files.example\", \"uri\": \"/webdav/tool.exe\", \"user_agent\": \"Mozilla/5.0\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"method\":\"GET\",\"host\":\"files.example\",\"uri\":\"/webdav/tool.exe\",\"user_agent\":\"Mozilla/5.0\"}",
   "rule": "100809",
   "level": 7,
   "format": "json",
@@ -470,7 +488,7 @@
  },
  {
   "name": "sigma HTTP executable from suspicious TLD",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"method\": \"GET\", \"host\": \"dl.example.tk\", \"uri\": \"/a/payload.exe\", \"user_agent\": \"Mozilla/5.0\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"method\":\"GET\",\"host\":\"dl.example.tk\",\"uri\":\"/a/payload.exe\",\"user_agent\":\"Mozilla/5.0\"}",
   "rule": "100810",
   "level": 7,
   "format": "json",
@@ -478,7 +496,7 @@
  },
  {
   "name": "sigma HTTP plain page is silent",
-  "log": "{\"ts\": 1761724800.0, \"uid\": \"C1\", \"id.orig_h\": \"10.10.120.5\", \"id.resp_h\": \"203.0.113.10\", \"method\": \"GET\", \"host\": \"www.example.com\", \"uri\": \"/index.html\", \"user_agent\": \"Mozilla/5.0\"}",
+  "log": "{\"ts\":1761724800.0,\"uid\":\"C1\",\"id.orig_h\":\"10.10.120.5\",\"id.resp_h\":\"203.0.113.10\",\"method\":\"GET\",\"host\":\"www.example.com\",\"uri\":\"/index.html\",\"user_agent\":\"Mozilla/5.0\"}",
   "rule": "100801",
   "level": 0,
   "format": "json",
@@ -486,7 +504,7 @@
  },
  {
   "name": "guacamole failed login",
-  "log": "{\"log\": \"08:00:00.000 [http-nio-8080-exec-1] WARN  o.a.g.r.event.EventLoggingListener - Authentication attempt from [10.10.120.5, 127.0.0.1] for user \\\"admin\\\" failed.\\n\", \"stream\": \"stdout\", \"time\": \"2026-10-29T08:00:00.000000000Z\"}",
+  "log": "{\"log\":\"08:00:00.000 [http-nio-8080-exec-1] WARN  o.a.g.r.event.EventLoggingListener - Authentication attempt from [10.10.120.5, 127.0.0.1] for user \\\"admin\\\" failed.\\n\",\"stream\":\"stdout\",\"time\":\"2026-10-29T08:00:00.000000000Z\"}",
   "rule": "100931",
   "level": 5,
   "format": "json",
@@ -494,7 +512,7 @@
  },
  {
   "name": "guacamole brute force (3 in 5m)",
-  "log": "{\"log\": \"08:00:00.000 [http-nio-8080-exec-1] WARN  o.a.g.r.event.EventLoggingListener - Authentication attempt from [10.10.120.5, 127.0.0.1] for user \\\"admin\\\" failed.\\n\", \"stream\": \"stdout\", \"time\": \"2026-10-29T08:00:00.000000000Z\"}",
+  "log": "{\"log\":\"08:00:00.000 [http-nio-8080-exec-1] WARN  o.a.g.r.event.EventLoggingListener - Authentication attempt from [10.10.120.5, 127.0.0.1] for user \\\"admin\\\" failed.\\n\",\"stream\":\"stdout\",\"time\":\"2026-10-29T08:00:00.000000000Z\"}",
   "rule": "100932",
   "level": 10,
   "format": "json",
@@ -503,7 +521,7 @@
  },
  {
   "name": "guacamole success",
-  "log": "{\"log\": \"08:00:00.000 [http-nio-8080-exec-1] INFO  o.a.g.r.event.EventLoggingListener - User \\\"admin\\\" successfully authenticated from [10.10.110.5, 127.0.0.1].\\n\", \"stream\": \"stdout\", \"time\": \"2026-10-29T08:00:00.000000000Z\"}",
+  "log": "{\"log\":\"08:00:00.000 [http-nio-8080-exec-1] INFO  o.a.g.r.event.EventLoggingListener - User \\\"admin\\\" successfully authenticated from [10.10.110.5, 127.0.0.1].\\n\",\"stream\":\"stdout\",\"time\":\"2026-10-29T08:00:00.000000000Z\"}",
   "rule": "100933",
   "level": 5,
   "format": "json",
@@ -511,7 +529,7 @@
  },
  {
   "name": "guacamole blocking",
-  "log": "{\"log\": \"08:00:00.000 [http-nio-8080-exec-1] WARN  o.a.g.a.b.InMemoryAuthenticationFailureTracker - Blocking authentication attempt from address 10.10.120.5 for 300 seconds.\\n\", \"stream\": \"stdout\", \"time\": \"2026-10-29T08:00:00.000000000Z\"}",
+  "log": "{\"log\":\"08:00:00.000 [http-nio-8080-exec-1] WARN  o.a.g.a.b.InMemoryAuthenticationFailureTracker - Blocking authentication attempt from address 10.10.120.5 for 300 seconds.\\n\",\"stream\":\"stdout\",\"time\":\"2026-10-29T08:00:00.000000000Z\"}",
   "rule": "100934",
   "level": 10,
   "format": "json",

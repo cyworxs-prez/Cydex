@@ -53,7 +53,7 @@
 
   <rule id="100732" level="7">
     <if_sid>100730</if_sid>
-    <field name="percent_lost">^[1-9][0-9]\.|^100</field>
+    <field name="percent_lost" type="pcre2">^(?:[1-9][0-9]|100)(?:\.|$)</field>
     <description>Zeek capture loss elevated: $(percent_lost)% of traffic missed</description>
     <group>zeek,collector_health,</group>
   </rule>

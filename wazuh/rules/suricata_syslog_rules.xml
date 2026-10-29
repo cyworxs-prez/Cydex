@@ -31,7 +31,7 @@
 
   <rule id="100210" level="2">
     <if_sid>100201,100202,100203</if_sid>
-    <field name="src_ip">^10\.10\.140\.12$</field>
+    <srcip>10.10.140.12</srcip>
     <description>Suricata: Alert from authorised scanner - $(signature)</description>
     <group>ids_alert,scanner_allowlist,</group>
   </rule>
