@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json,os,base64,ssl,urllib.request,re
+import json,re
 import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'scripts'))

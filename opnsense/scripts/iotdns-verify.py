@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import json,os,base64,ssl,urllib.request
+import json
 import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), '..', 'scripts'))
-from opn_api import call as _api_call, sel  # credentials: see config/opnsense.env.example
+from opn_api import call as _api_call  # credentials: see config/opnsense.env.example
 def call(path, body=None, t=90):
     try: return _api_call(path, body, timeout=t)
     except Exception as ex: return {'ERR': str(ex)[:150]}

@@ -1,3 +1,4 @@
+# shellcheck shell=sh
 # Shared by the MCP launchers. Usage:  launch_with_env <env-file> <command...>
 #
 #   env file has op:// references -> resolved by `op run` (1Password CLI required)
@@ -23,6 +24,9 @@ launch_with_env() {
     ------) ;;
     *) echo "WARN: $_envf holds plain secrets and is readable by others - chmod 600 it" >&2;;
   esac
-  set -a; . "$_envf"; set +a
+  set -a
+  # shellcheck source=/dev/null
+  . "$_envf"
+  set +a
   exec "$@"
 }
