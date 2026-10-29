@@ -232,10 +232,17 @@
   "repeat": 12
  },
  {
-  "name": "scanner block to internet is low",
-  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,6,tcp,60,10.10.140.12,203.0.113.10,51515,22,0,S,1000,,64240,,mss",
-  "rule": "100022",
+  "name": "scanner blocked to TRUSTED is low",
+  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,6,tcp,60,10.10.140.12,10.10.110.20,51515,22,0,S,1000,,64240,,mss",
+  "rule": "100849",
   "level": 2
+ },
+ {
+  "name": "scanner sweep does not page",
+  "log": "Oct 29 08:00:00 fw.example filterlog[1234]: 5,,,1000000103,vtnet1,match,block,in,4,0x0,,64,0,0,DF,6,tcp,60,10.10.140.12,10.10.130.2,51515,22,0,S,1000,,64240,,mss",
+  "rule": "100849",
+  "level": 2,
+  "repeat": 12
  },
  {
   "name": "tcp cross-segment to ephemeral port still alerts",

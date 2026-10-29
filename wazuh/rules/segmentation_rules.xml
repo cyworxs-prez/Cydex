@@ -11,6 +11,13 @@
     <group>firewall_block,internal_block,lateral,</group>
   </rule>
 
+  <rule id="100849" level="2">
+    <if_sid>100840</if_sid>
+    <srcip>10.10.140.12</srcip>
+    <description>Authorized scanner $(srcip) blocked reaching $(dstip) (expected during scans, not paged)</description>
+    <group>firewall_block,internal_block,scanner_allowlist,</group>
+  </rule>
+
   <rule id="100841" level="6">
     <if_sid>100840</if_sid>
     <dstip>10.10.110.0/24</dstip>
